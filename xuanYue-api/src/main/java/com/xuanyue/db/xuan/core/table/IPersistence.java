@@ -2,7 +2,9 @@ package com.xuanyue.db.xuan.core.table;
 
 /**
  * 索引持久化
- * @author guanh
+ * @author 解观海
+ * @email  guanhaixie@sina.cn
+ * @date 2020年6月23日
  *
  */
 public interface IPersistence {

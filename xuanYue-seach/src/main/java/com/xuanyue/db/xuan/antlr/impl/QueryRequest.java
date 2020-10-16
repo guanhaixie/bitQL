@@ -1,7 +1,14 @@
 package com.xuanyue.db.xuan.antlr.impl;
 
 import java.util.Map;
-
+/**
+ * 查询请求
+ *
+ * @author 解观海
+ * @email guanhaixie@sina.cn
+ * @date 2020年10月16日
+ *
+ */
 public class QueryRequest {
 
 	private String sql;

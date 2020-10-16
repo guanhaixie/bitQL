@@ -1,6 +1,7 @@
 package com.xuanyue.db.xuan.antlr.impl;
 
 /**
+ * 多维排序的维度信息
  * @author 解观海
  * @email  guanhaixie@sina.cn
  * @date 2020年6月29日

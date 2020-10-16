@@ -3,6 +3,13 @@ package com.xuanyue.db.xuan.core.table;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * bit 向量
+ * @author 解观海
+ * @email  guanhaixie@sina.cn
+ * @date 2020年6月23日
+ *
+ */
 public interface IBitIndex extends Source,Cloneable, java.io.Serializable{
 	public void flush(int maxId) ;
 	public void set(int index,boolean value) ;

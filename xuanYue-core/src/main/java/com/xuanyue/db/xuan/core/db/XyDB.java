@@ -7,7 +7,14 @@ import java.util.Map.Entry;
 
 import com.xuanyue.db.xuan.core.table.IXyTable;
 import com.xuanyue.db.xuan.core.table.XyTable;
-
+/**
+ * 库
+ *
+ * @author 解观海
+ * @email guanhaixie@sina.cn
+ * @date 2020年10月16日
+ *
+ */
 public class XyDB implements IXyDB{
 
 	private String name;

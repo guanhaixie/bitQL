@@ -2,7 +2,13 @@ package com.xuanyue.db.xuan.core.db;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * 表信息
+ * @author 解观海
+ * @email  guanhaixie@sina.cn
+ * @date 2020年6月23日
+ *
+ */
 public class TableMeta {
 
 	private Map<String,ColumnMeta> columns = new HashMap<>();

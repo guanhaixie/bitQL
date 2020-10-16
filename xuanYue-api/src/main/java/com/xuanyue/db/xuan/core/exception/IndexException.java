@@ -1,5 +1,12 @@
 package com.xuanyue.db.xuan.core.exception;
 
+/**
+ * 索引异常
+ * @author 解观海
+ * @email  guanhaixie@sina.cn
+ * @date 2020年6月23日
+ *
+ */
 public class IndexException extends RuntimeException {
 
 	/**

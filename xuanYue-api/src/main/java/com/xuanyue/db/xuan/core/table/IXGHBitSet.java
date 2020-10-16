@@ -1,7 +1,14 @@
 package com.xuanyue.db.xuan.core.table;
 
 import java.util.List;
-
+/**
+ * bit向量的一个分片。
+ * 本类参考了jdk本身的类BitSet，由于BitSet的性质不符合向量计算的要求，所以对其加以改造。
+ * @author 解观海
+ * @email  guanhaixie@sina.cn
+ * @date 2020年6月23日
+ *
+ */
 public interface IXGHBitSet {
 	
 	public static final int LONG_NUM = 10000;

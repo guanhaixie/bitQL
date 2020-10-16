@@ -17,7 +17,14 @@ import com.xuanyue.db.xuan.antlr.BitQParser.OrNotContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.Phone_seachContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.To_dateContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.ValuesContext;
-
+/**
+ * 资源使用统计器。
+ *
+ * @author 解观海
+ * @email guanhaixie@sina.cn
+ * @date 2020年10月16日
+ *
+ */
 public class MaxSourceCountor {
 	
 	private int maxId;

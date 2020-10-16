@@ -7,7 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.xuanyue.db.xuan.core.table.IColumn;
-
+/**
+ * 列信息
+ * @author 解观海
+ * @email  guanhaixie@sina.cn
+ * @date 2020年6月23日
+ *
+ */
 public class ColumnMeta{
 
 	private String name;

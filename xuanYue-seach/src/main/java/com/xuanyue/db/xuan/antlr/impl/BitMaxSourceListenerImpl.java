@@ -21,7 +21,14 @@ import com.xuanyue.db.xuan.antlr.BitQParser.Phone_seachContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.SortByContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.To_dateContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.ValuesContext;
-
+/**
+ * 解析sql,计算使用的最大资源数，用于银行家算法申请资源
+ *
+ * @author 解观海
+ * @email guanhaixie@sina.cn
+ * @date 2020年10月16日
+ *
+ */
 public class BitMaxSourceListenerImpl extends BitQBaseListener{
 
 	

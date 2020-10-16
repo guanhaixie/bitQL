@@ -37,8 +37,12 @@ import com.xuanyue.db.xuan.core.table.ISortElement;
 import com.xuanyue.db.xuan.core.table.IXyTable;
 import com.xuanyue.db.xuan.core.table.sort.LimitHandler;
 /**
- * 
- * @author guanh
+ * 面向排序和分页的sql解析。
+ * 一次查询，返回 记录总数，和结果结果集
+ *
+ * @author 解观海
+ * @email guanhaixie@sina.cn
+ * @date 2020年10月16日
  *
  */
 public class BitQListenerImpl extends BitQBaseListener{

@@ -4,12 +4,10 @@ import java.util.List;
 
 /**
  * 列接口
- * 操作结果会保存在cache中，其他BitIndex是计算所需的临时内存。
- * 
  * @author 解观海
  * @email  guanhaixie@sina.cn
  * @date 2020年6月23日
- * @version 0.1
+ *
  */
 public interface IColumn<T> extends IPersistence{
 

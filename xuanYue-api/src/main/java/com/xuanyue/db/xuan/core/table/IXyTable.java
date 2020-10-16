@@ -8,8 +8,8 @@ import java.util.NoSuchElementException;
  * 数据表接口
  * @author 解观海
  * @email  guanhaixie@sina.cn
- * @date 2020年6月27日
- * @version 0.1
+ * @date 2020年6月23日
+ *
  */
 public interface IXyTable extends IPersistence{
 

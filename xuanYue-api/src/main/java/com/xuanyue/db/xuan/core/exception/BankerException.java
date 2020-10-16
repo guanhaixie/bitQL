@@ -1,5 +1,12 @@
 package com.xuanyue.db.xuan.core.exception;
 
+/**
+ * 银行家算法异常
+ * @author 解观海
+ * @email  guanhaixie@sina.cn
+ * @date 2020年6月23日
+ *
+ */
 public class BankerException extends RuntimeException {
 
 	/**

@@ -2,7 +2,14 @@ package com.xuanyue.db.xuan.antlr.impl;
 
 import java.util.List;
 import java.util.Map;
-
+/**
+ * 查询结果
+ *
+ * @author 解观海
+ * @email guanhaixie@sina.cn
+ * @date 2020年10月16日
+ *
+ */
 public class QueryResult {
 
 	private int count;
