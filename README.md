@@ -30,6 +30,7 @@ BitQL是一个内存检索引擎，设计理念是数据存储即索引。首先
 		phs.addColumn(UNumberIndex.class, "city" ,14 );
 		phs.addColumn(DateIndex.class, "create_time" );//35
 2.创建库实例，并造一个亿的测试数据
+
 		IXyDB db = new XyDB();
 		db.init(dbMeta);
 		db.load();
