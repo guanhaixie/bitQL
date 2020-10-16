@@ -45,17 +45,28 @@ BitQL是一个内存检索引擎，设计理念是数据存储即索引。首先
 			}
 		}
 		table.save(String.format("%s/%s/%s",dbMeta.getDataPath(),dbMeta.getName(),  tableName));
-		
+3.查询
 
+		SeachContext.initDB(db);//初始化检索引擎的上下文
+                QueryRequest re = new QueryRequest();
+                re.setSql("select phone,price,create_time "+
+                          "from T_PH where price>2000f and ismy=true and city>3 "
+                           "order by price limit 12000000,10");		
 
+4.执行查询和打印结果
 
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
+		QueryResult x = null;
+		long now = System.currentTimeMillis();
+		for(int i=0;i<100;i++) {//执行一百次
+			x = SeachContext.query(re);
+		}
+		System.out.println(x.getFl());
+		x.getResult().forEach( e->{
+			System.out.println(e);
+		});
+		System.out.println(x.getCount());
+		float xd = System.currentTimeMillis()-now;
+		System.out.println(xd/100);
 
 #### 特技
 
