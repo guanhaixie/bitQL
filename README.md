@@ -9,15 +9,44 @@ BitQL是一个内存检索引擎，设计理念是数据存储即索引。首先
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+本工程使用maven编译，都是都是引用的常见第三jar,编译使用即可
 
 #### 使用说明
+1. 创建数据库的元数据和创建表t_ph
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+                DBMeta dbMeta = new DBMeta();
+		dbMeta.setName("xiegh");
+		dbMeta.setDataPath("e:/data");
+		
+		TableMeta phs = new TableMeta();
+		phs.setName("t_ph");
+		phs.setSource(80);
+		dbMeta.add("t_ph", phs);
+		
+		phs.addColumn(PhoneIndex.class, "phone"  );
+		phs.addColumn(UNumberIndex.class, "operator" ,2 );
+		phs.addColumn(FLOATIndex.class, "price" ,24,100,0 );
+		phs.addColumn(BooleanIndex.class, "ismy"  );
+		phs.addColumn(UNumberIndex.class, "city" ,14 );
+		phs.addColumn(DateIndex.class, "create_time" );//35
+2.创建库实例，并造一个亿的测试数据
+		IXyDB db = new XyDB();
+		db.init(dbMeta);
+		db.load();
+		String tableName = "t_ph";
+		IXyTable table = db.getTable(tableName);
+		table.flush(100000000);
+		Map<String,Object> r = new HashMap<>();
+		for(int i=0;i<100000000;i++) {
+			table.insertInto(getPh(r));
+			if(i%10000==9999) {
+				System.out.println(i);
+			}
+		}
+		table.save(String.format("%s/%s/%s",dbMeta.getDataPath(),dbMeta.getName(),  tableName));
+		
+
+
 
 #### 参与贡献
 
