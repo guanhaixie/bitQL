@@ -2,6 +2,7 @@ package com.xuanyue.db.xuan;
 
 
  
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,26 +44,32 @@ public class Main {
 		
 //		JSONObject json = (JSONObject)JSONObject.toJSON(dbMeta);
 //		System.out.println(json.toJSONString());
-		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
 //		
 		IXyDB db = new XyDB();
 		db.init(dbMeta);
 		db.load();
 		String tableName = "t_ph";
 		IXyTable table = db.getTable(tableName);
-		System.out.print("xiegh [init number]>");
+		Date start = new Date();
+		System.out.print("xiegh [随机生成测试数据条数]>");
 		int num = Integer.parseInt( sc.nextLine() );
 		table.flush(num);
 		Map<String,Object> r = new HashMap<>();
+		Date end = null;
+		System.out.print("xiegh [日志 频率    (条/次)  ]>");
+		int av = Integer.parseInt( sc.nextLine() );
 		for(int i=0;i<num;i++) {
 			table.insertInto(getPh(r));
-			if(i%10000==9999) {
-				System.out.println(i);
+			if(i%av==av-1) {
+				end = new Date();
+				System.out.println(String.format("%s from %s to %s [ %s ms ]", i, simpleDateFormat.format(start) ,simpleDateFormat.format(end),(end.getTime()-start.getTime()) )   );
 			}
 		}
 		table.save(String.format("%s/%s/%s",dbMeta.getDataPath(),dbMeta.getName(),  tableName));
 		
-		
+		end = new Date();
+		System.out.println(String.format("%s to %s [ %s ms ]",  simpleDateFormat.format(start) ,simpleDateFormat.format(end),(end.getTime()-start.getTime()) )   );
 	}
 	static void test(Scanner sc) throws Exception{
 		DBMeta dbMeta = new DBMeta();
