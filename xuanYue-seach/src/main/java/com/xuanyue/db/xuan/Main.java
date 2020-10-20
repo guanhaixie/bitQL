@@ -23,10 +23,9 @@ import com.xuanyue.db.xuan.core.table.IXyTable;
 
 
 public class Main {
-	static void init(int num) throws Exception{
+	static void init(Scanner sc) throws Exception{
 		DBMeta dbMeta = new DBMeta();
 		dbMeta.setName("xiegh");
-		Scanner sc = new Scanner(System.in);
 		System.out.print("xiegh [datapath]>");
 		dbMeta.setDataPath(sc.nextLine());
 		
@@ -51,9 +50,11 @@ public class Main {
 		db.load();
 		String tableName = "t_ph";
 		IXyTable table = db.getTable(tableName);
-		table.flush(100000000);
+		System.out.print("xiegh [init number]>");
+		int num = Integer.parseInt( sc.nextLine() );
+		table.flush(num);
 		Map<String,Object> r = new HashMap<>();
-		for(int i=0;i<100000000;i++) {
+		for(int i=0;i<num;i++) {
 			table.insertInto(getPh(r));
 			if(i%10000==9999) {
 				System.out.println(i);
@@ -63,10 +64,10 @@ public class Main {
 		
 		
 	}
-	public static void main(String[] args) throws Exception {
+	static void test(Scanner sc) throws Exception{
 		DBMeta dbMeta = new DBMeta();
 		dbMeta.setName("xiegh");
-		Scanner sc = new Scanner(System.in);
+		
 		System.out.print("xiegh [datapath]>");
 		dbMeta.setDataPath(sc.nextLine());
 		
@@ -95,11 +96,13 @@ public class Main {
 		QueryRequest re = new QueryRequest();
 		System.out.print("xiegh [sql]>");
 		re.setSql(sc.nextLine());
-		//re.setSql("select phone,price,create_time from T_PH where price>2000f and ismy=true and city>3 order by price limit 12000000,10");
+		//re.setSql("select phone,price,create_time from T_PH where price>2000f and ismy=true and city>3  limit 12000000,10");
 //		re.setSql(args[1]);
 		QueryResult x = null;
 		long now = System.currentTimeMillis();
-		for(int i=0;i<1;i++) {
+		System.out.print("xiegh [times int]>");
+		int times = Integer.parseInt( sc.nextLine() );
+		for(int i=0;i<times;i++) {
 			x = SeachContext.query(re);
 		}
 		System.out.println(x.getFl());
@@ -108,7 +111,17 @@ public class Main {
 		});
 		System.out.println(x.getCount());
 		float xd = System.currentTimeMillis()-now;
-		System.out.println(xd/10000);
+		System.out.println(xd/times);
+	}
+	
+	public static void main(String[] args) throws Exception {
+		Scanner sc = new Scanner(System.in);
+		System.out.print("todo init or test>");
+		if("test".equals( sc.nextLine() )) {
+			test(sc);
+		}else {
+			init(sc);
+		}
 		
 //		table.saveRow(String.format("%s/%s/%s",dbMeta.getDataPath(),dbMeta.getName(),  tableName), id);
 		
