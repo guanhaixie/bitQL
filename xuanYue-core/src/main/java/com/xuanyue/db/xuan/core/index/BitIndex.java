@@ -243,6 +243,7 @@ public class BitIndex implements IBitIndex{
 		byte[] result=new byte[8];
 		XGHBitSet.longToByteArray(result, word, 0);
 		rw.write( result );
+		rw.close();
 	}
 	
 	public void loadV1(String path) throws Exception {

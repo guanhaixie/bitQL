@@ -11,10 +11,21 @@ BitQL是一个内存检索引擎，设计理念是数据存储即索引。首先
 
 本工程使用maven编译，都是都是引用的常见第三jar,编译使用即可
 
+环境：jdk8 maven 
+
+git clone https://gitee.com/xiegh517/bit-ql.git
+
+cd bit-sql
+
+cd xuanYue-seach
+
+mvn install
+
+
 #### 使用说明
 1. 创建数据库的元数据和创建表t_ph
 
-                DBMeta dbMeta = new DBMeta();
+        DBMeta dbMeta = new DBMeta();
 		dbMeta.setName("xiegh");
 		dbMeta.setDataPath("e:/data");
 		
@@ -39,7 +50,7 @@ BitQL是一个内存检索引擎，设计理念是数据存储即索引。首先
 		table.flush(100000000);
 		Map<String,Object> r = new HashMap<>();
 		for(int i=0;i<100000000;i++) {
-			table.insertInto(getPh(r));
+			table.insertInto(getPh(r));//随机生成一行测试数据并插入表中，getPh方法体在后边给出
 			if(i%10000==9999) {
 				System.out.println(i);
 			}
@@ -48,8 +59,9 @@ BitQL是一个内存检索引擎，设计理念是数据存储即索引。首先
 3.查询
 
 		SeachContext.initDB(db);//初始化检索引擎的上下文
-                QueryRequest re = new QueryRequest();
-                re.setSql("select phone,price,create_time "+
+        QueryRequest re = new QueryRequest();
+        //深度分页，取1200000页
+        re.setSql("select phone,price,create_time "+
                           "from T_PH where price>2000f and ismy=true and city>3 "
                            "order by price limit 12000000,10");		
 
@@ -67,6 +79,35 @@ BitQL是一个内存检索引擎，设计理念是数据存储即索引。首先
 		System.out.println(x.getCount());
 		float xd = System.currentTimeMillis()-now;
 		System.out.println(xd/100);
+
+5.测试数据构造方法
+
+		static float getPrice() {//随机生成价格
+		    float v = random(1000000);
+			return v/100;
+		}
+		static String getPhStr() {//随机生成手机号码
+			long r = random(130,199)*100000000l+random(0,100000000);
+			return String.format("%s", r);
+		}
+		
+		static int random(int max) {//生成0到max的随机数
+			int min=0;
+			return (int) (Math.random()*(max-min)+min);
+		}
+		static int random(int min,int max) {//生成min到max的随机数
+			return (int) (Math.random()*(max-min)+min);
+		}
+		static Map<String,Object> getPh(Map<String,Object> r){//随机生成一行测试数据
+			r.put("phone", getPhStr());
+			r.put("operator", random(3));
+			r.put("price", getPrice());
+			r.put("ismy", random(100)<=30);
+			r.put("city", random(1000)+1);
+			r.put("create_time", new Date(System.currentTimeMillis()-1000l*random(3600*24*365*10)));
+			return r;
+		}
+		
 
 #### 特技
 
