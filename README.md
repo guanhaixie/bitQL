@@ -4,28 +4,69 @@
 BitQL是一个内存检索引擎，设计理念是数据存储即索引。首先如果是boolean型数据，则直接用一个bit向量，N个数据，在内存中存放，最多浪费空间不超过8个byte(一个long整形的空间)。其他数据类型都是由一系列的相同维度的bit向量组成。例如把long看出由64个bit向量组成。 
 
 #### 软件架构
-软件架构说明
+![架构](https://images.gitee.com/uploads/images/2020/0626/134456_a7d3fa57_5337335.png "屏幕截图.png")
 
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+本工程使用maven编译，都是都是引用的常见第三jar,编译使用即可
 
 #### 使用说明
+1. 创建数据库的元数据和创建表t_ph
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+                DBMeta dbMeta = new DBMeta();
+		dbMeta.setName("xiegh");
+		dbMeta.setDataPath("e:/data");
+		
+		TableMeta phs = new TableMeta();
+		phs.setName("t_ph");
+		phs.setSource(80);
+		dbMeta.add("t_ph", phs);
+		
+		phs.addColumn(PhoneIndex.class, "phone"  );
+		phs.addColumn(UNumberIndex.class, "operator" ,2 );
+		phs.addColumn(FLOATIndex.class, "price" ,24,100,0 );
+		phs.addColumn(BooleanIndex.class, "ismy"  );
+		phs.addColumn(UNumberIndex.class, "city" ,14 );
+		phs.addColumn(DateIndex.class, "create_time" );//35
+2.创建库实例，并造一个亿的测试数据
 
-#### 参与贡献
+		IXyDB db = new XyDB();
+		db.init(dbMeta);
+		db.load();
+		String tableName = "t_ph";
+		IXyTable table = db.getTable(tableName);
+		table.flush(100000000);
+		Map<String,Object> r = new HashMap<>();
+		for(int i=0;i<100000000;i++) {
+			table.insertInto(getPh(r));
+			if(i%10000==9999) {
+				System.out.println(i);
+			}
+		}
+		table.save(String.format("%s/%s/%s",dbMeta.getDataPath(),dbMeta.getName(),  tableName));
+3.查询
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+		SeachContext.initDB(db);//初始化检索引擎的上下文
+                QueryRequest re = new QueryRequest();
+                re.setSql("select phone,price,create_time "+
+                          "from T_PH where price>2000f and ismy=true and city>3 "
+                           "order by price limit 12000000,10");		
 
+4.执行查询和打印结果
+
+		QueryResult x = null;
+		long now = System.currentTimeMillis();
+		for(int i=0;i<100;i++) {//执行一百次
+			x = SeachContext.query(re);
+		}
+		System.out.println(x.getFl());
+		x.getResult().forEach( e->{
+			System.out.println(e);
+		});
+		System.out.println(x.getCount());
+		float xd = System.currentTimeMillis()-now;
+		System.out.println(xd/100);
 
 #### 特技
 
