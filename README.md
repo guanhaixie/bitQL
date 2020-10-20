@@ -6,6 +6,10 @@ BitQL是一个内存检索引擎，设计理念是数据存储即索引。首先
 #### 软件架构
 ![架构](https://images.gitee.com/uploads/images/2020/0626/134456_a7d3fa57_5337335.png "屏幕截图.png")
 
+整个架构都构建在bit向量上，借用了传统关系型数据的库表和数据列的概念。最大的改进和创新在意对数据表垂直切分的极限做法，即数据行和数据列对齐后，最小单元就是一个bit向量。需要这样看待数据：一行数据假设
+有若干列组成,每列有不同个数的bit位构成，一行共有m个bit位，有n行数据，形成一个n行m列的矩阵，一张表就是由m个n维bit向量组成的，一列数据对应这个向量组的一个子向量组。这样做的一个好处在于，数据按照自然顺序插入后，天然具有二叉排序树的性质，bit向量的底层是long数组,long提供高效的bit位统计函数，所以在排序和深度随机分页方便就会有天然的优势。
+
+不过数据被拆散到了bit位的程度也带来了一个劣势，就是不适合做聚合函数，因为数据聚合时，大多需要先把bit位还原成原始数据，然后再聚合计算。所以当前还没有做聚合函数的计划。本数据检索引擎也不是面向数据分析儿设计的，
 
 #### 安装教程
 
@@ -22,7 +26,7 @@ cd xuanYue-seach
 mvn install
 
 
-#### 使用说明
+#### 简单的jvm集成使用说明
 1. 创建数据库的元数据和创建表t_ph
 
         DBMeta dbMeta = new DBMeta();
@@ -107,13 +111,31 @@ mvn install
 			r.put("create_time", new Date(System.currentTimeMillis()-1000l*random(3600*24*365*10)));
 			return r;
 		}
-		
 
-#### 特技
+#### 数据类型
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+1. PhoneIndex 手机号，并支持8位的固话号码
+
+2. BooleanIndex boolean数据列
+
+3. DateIndex 日期 数据列
+
+4. FLOATIndex
+
+5. IntIndex
+
+6. ListUnumberIndex 无符号整数列表
+
+7. LongIndex 
+
+8. MapBooleanIndex 可以看成是一组BooleanIndex列集合，
+
+9. MapUNumberIndex
+
+10. NumberIndex 有符号整数
+
+11. UIntIndex
+
+12. ULongIndex 
+
+13. UNumberIndex
