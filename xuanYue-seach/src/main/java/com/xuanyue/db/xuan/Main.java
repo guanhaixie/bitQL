@@ -92,26 +92,32 @@ public class Main {
 		
 		SeachContext.initDB(db);
 		
-		
-		QueryRequest re = new QueryRequest();
-		System.out.print("xiegh [sql]>");
-		re.setSql(sc.nextLine());
-		//re.setSql("select phone,price,create_time from T_PH where price>2000f and ismy=true and city>3  limit 12000000,10");
-//		re.setSql(args[1]);
-		QueryResult x = null;
-		long now = System.currentTimeMillis();
-		System.out.print("xiegh [times int]>");
-		int times = Integer.parseInt( sc.nextLine() );
-		for(int i=0;i<times;i++) {
-			x = SeachContext.query(re);
+		while(true) {
+			QueryRequest re = new QueryRequest();
+			System.out.print("xiegh [sql]>");
+			re.setSql(sc.nextLine());
+			//re.setSql("select phone,price,create_time from T_PH where price>2000f and ismy=true and city>3 order by price  limit 12000000,10");
+//			re.setSql(args[1]);
+			QueryResult x = null;
+			System.out.println();
+			System.out.println(new Date());
+			long now = System.currentTimeMillis();
+			System.out.print("xiegh [times int]>");
+			
+			int times = Integer.parseInt( sc.nextLine() );
+			for(int i=0;i<times;i++) {
+				x = SeachContext.query(re);
+			}
+			System.out.println(x.getFl());
+			x.getResult().forEach( e->{
+				System.out.println(e);
+			});
+			System.out.println(x.getCount());
+			long xd = System.currentTimeMillis()-now;
+			System.out.println(xd/times);
+			System.out.println(new Date());
 		}
-		System.out.println(x.getFl());
-		x.getResult().forEach( e->{
-			System.out.println(e);
-		});
-		System.out.println(x.getCount());
-		float xd = System.currentTimeMillis()-now;
-		System.out.println(xd/times);
+		
 	}
 	
 	public static void main(String[] args) throws Exception {
