@@ -87,23 +87,15 @@ public class BitMaxSourceListenerImpl extends BitQBaseListener{
 		ConditionElementContext e = el.get(0);
 		GroupConditionContext group = e.groupCondition();
 		if(group!=null) {
-			System.out.println("( ");
 			handleGroupCondition(group,from +1);
-			System.out.println(") ");
 		}else {
 			handleConditionExpr(e.conditionExpr(),  from+1);
 		}
 		for(int i=1;i<el.size();i++) {
-			System.out.print("and ");
-			if(ans.get(i-1).NOT()!=null){
-				System.out.println("not ");
-			}
 			e = el.get(i);
 			group = e.groupCondition();
 			if(group!=null) {
-				System.out.println("( ");
 				handleGroupCondition(group,from +1);
-				System.out.println(") ");
 			}else {
 				handleConditionExpr(e.conditionExpr(),  from+1);
 			}
@@ -128,7 +120,6 @@ public class BitMaxSourceListenerImpl extends BitQBaseListener{
 			}else if("has_every_char".equals(method)) {
 				fulshMaxId(from+1);
 			}
-			System.out.println(String.format(" Phone_seach(%s,%s,%s )", fn.getText(),method,phone.STRING().getText()));
 			return;
 		}
 		
@@ -150,7 +141,6 @@ public class BitMaxSourceListenerImpl extends BitQBaseListener{
 			fulshMaxId(from+1);
 		}
 		ValuesContext value = expr.values();
-//		System.out.println(value.getText());
 		Object v = null;
 		TerminalNode sv = value.STRING();
 		
@@ -187,7 +177,6 @@ public class BitMaxSourceListenerImpl extends BitQBaseListener{
 			v = false;
 		} 
 		
-		System.out.println(String.format("%s %s %s ", fn.getText(),method,v));
 		
 	}
 	private String valueOfStr(String text) {

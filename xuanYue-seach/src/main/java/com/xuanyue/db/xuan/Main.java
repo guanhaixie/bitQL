@@ -5,7 +5,9 @@ package com.xuanyue.db.xuan;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
+import com.alibaba.fastjson.JSONObject;
 import com.xuanyue.db.xuan.antlr.impl.QueryRequest;
 import com.xuanyue.db.xuan.antlr.impl.QueryResult;
 import com.xuanyue.db.xuan.core.db.DBMeta;
@@ -24,7 +26,9 @@ public class Main {
 	static void init(int num) throws Exception{
 		DBMeta dbMeta = new DBMeta();
 		dbMeta.setName("xiegh");
-		dbMeta.setDataPath("e:/data");
+		Scanner sc = new Scanner(System.in);
+		System.out.print("xiegh [datapath]>");
+		dbMeta.setDataPath(sc.nextLine());
 		
 		TableMeta phs = new TableMeta();
 		phs.setName("t_ph");
@@ -62,7 +66,9 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		DBMeta dbMeta = new DBMeta();
 		dbMeta.setName("xiegh");
-		dbMeta.setDataPath("e:/data");
+		Scanner sc = new Scanner(System.in);
+		System.out.print("xiegh [datapath]>");
+		dbMeta.setDataPath(sc.nextLine());
 		
 		TableMeta phs = new TableMeta();
 		phs.setName("t_ph");
@@ -76,35 +82,24 @@ public class Main {
 		phs.addColumn(UNumberIndex.class, "city" ,14 );
 		phs.addColumn(DateIndex.class, "create_time" );//35
 		
-//		JSONObject json = (JSONObject)JSONObject.toJSON(dbMeta);
-//		System.out.println(json.toJSONString());
-		
-//		
+		JSONObject json = (JSONObject)JSONObject.toJSON(dbMeta);
+		System.out.println(json.toJSONString());
+		dbMeta = JSONObject.parseObject(json.toJSONString(), DBMeta.class);
 		IXyDB db = new XyDB();
 		db.init(dbMeta);
 		db.load();
-		String tableName = "t_ph";
-		IXyTable table = db.getTable(tableName);
-//		table.flush(100000000);
-//		Map<String,Object> r = new HashMap<>();
-//		for(int i=0;i<100000000;i++) {
-//			table.insertInto(getPh(r));
-//			if(i%10000==9999) {
-//				System.out.println(i);
-//			}
-//		}
-//		table.save(String.format("%s/%s/%s",dbMeta.getDataPath(),dbMeta.getName(),  tableName));
-//		System.out.println(table.read(1));
 		
 		SeachContext.initDB(db);
 		
 		
 		QueryRequest re = new QueryRequest();
-		re.setSql("select phone,price,create_time from T_PH where price>2000f and ismy=true and city>3 order by price limit 12000000,10");
+		System.out.print("xiegh [sql]>");
+		re.setSql(sc.nextLine());
+		//re.setSql("select phone,price,create_time from T_PH where price>2000f and ismy=true and city>3 order by price limit 12000000,10");
 //		re.setSql(args[1]);
 		QueryResult x = null;
 		long now = System.currentTimeMillis();
-		for(int i=0;i<10;i++) {
+		for(int i=0;i<1;i++) {
 			x = SeachContext.query(re);
 		}
 		System.out.println(x.getFl());

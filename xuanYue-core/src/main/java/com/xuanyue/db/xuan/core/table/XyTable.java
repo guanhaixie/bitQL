@@ -11,6 +11,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.xuanyue.db.xuan.core.exception.IndexException;
 import com.xuanyue.db.xuan.core.index.BitIndex;
 import com.xuanyue.db.xuan.core.tools.SafeManager;
@@ -24,7 +27,7 @@ import com.xuanyue.db.xuan.core.tools.Savor;
  * @author guanh
  */
 public class XyTable implements IXyTable{
-	
+	private static Logger log = LoggerFactory.getLogger(XyTable.class);
 	private String name;
 	private Map<String,IColumn<?>> name2column = new HashMap<>();
 	private Map<Integer,ReadWriteLock> locks = new HashMap<>();
@@ -78,7 +81,7 @@ public class XyTable implements IXyTable{
 	}
 	@Override
 	public void expr(String fieldName,String op,Object v,List<IBitIndex> caches) {
-		System.out.println(String.format("%s %s %s ", fieldName,op,v));
+		log.debug(String.format(" %s %s %s",fieldName,op,v ));
 		IColumn<?> c = name2column.get(fieldName.toLowerCase());
 		c.expr(op, v, caches);
 	}
