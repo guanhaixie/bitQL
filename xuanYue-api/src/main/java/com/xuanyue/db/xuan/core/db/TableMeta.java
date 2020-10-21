@@ -49,6 +49,13 @@ public class TableMeta {
 		this.source = source;
 	}
 	
-	
+	public String info() {
+		StringBuffer r = new StringBuffer();
+		r.append( "table name:" );
+		r.append( name);
+		r.append("\r\n");
+		
+		return r.toString();
+	}
 	
 }

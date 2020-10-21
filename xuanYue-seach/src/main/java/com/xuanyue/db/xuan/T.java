@@ -16,10 +16,14 @@ public class T {
 //		b.save("E:/data/xiegh/t_ph/mask");
 //		System.out.println(b.cardinality());
 //		System.out.println(b.nextSetBit(0));
+//		Scanner sc = new Scanner(System.in);
+//		log.info("xiegh> data path:");
+//		String name = sc.nextLine();
+//		log.info("xiegh> data path:"+name);
+		System.out.println("12345");
+		Thread.sleep(5000);
+		System.out.println("\b\b");
 		Scanner sc = new Scanner(System.in);
-		log.info("xiegh> data path:");
-		String name = sc.nextLine();
-		log.info("xiegh> data path:"+name);
 		
 	}
 

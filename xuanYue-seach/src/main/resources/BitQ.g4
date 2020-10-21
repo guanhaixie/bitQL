@@ -4,7 +4,7 @@ grammar BitQ;
 }
 query : expr;
 //expr : SELECT result FROM repo (WHERE orCondition  groupBy? sortBy? mix? limit? SEMI)?;
-expr : SELECT result FROM repo (WHERE orCondition sortBy? mix? limit? SEMI)?;
+expr : SELECT result FROM repo (WHERE orCondition)? sortBy? mix? limit? SEMI?;
 //groupBy:Group By fullName (Having function op=('=' | '!='|'>='|'>'|'<='|'<')  NUM)?;
 //function: op=(Sum|Max|Min|Count|Avg) '(' (fullName|NUM)  ')';
 repo: fullName (',' fullName)*;

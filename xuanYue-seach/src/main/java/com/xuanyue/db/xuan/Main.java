@@ -103,7 +103,7 @@ public class Main {
 			QueryRequest re = new QueryRequest();
 			System.out.print("xiegh [sql]>");
 			re.setSql(sc.nextLine());
-			//re.setSql("select phone,price,create_time from T_PH where price>2000f and ismy=true and city>3 order by price  limit 12000000,10");
+			//re.setSql("select phone,price,create_time from T_PH where price>2000f and ismy=true and city>3 order by price  limit 12000000,10;");
 //			re.setSql(args[1]);
 			QueryResult x = null;
 			System.out.println();
@@ -126,14 +126,57 @@ public class Main {
 		}
 		
 	}
-	
+	static void show(Scanner sc) throws Exception{
+		DBMeta dbMeta = new DBMeta();
+		dbMeta.setName("xiegh");
+		
+		System.out.print("xiegh [datapath]>");
+		dbMeta.setDataPath(sc.nextLine());
+		
+		TableMeta phs = new TableMeta();
+		phs.setName("t_ph");
+		phs.setSource(80);
+		dbMeta.add("t_ph", phs);
+		
+		phs.addColumn(PhoneIndex.class, "phone"  );
+		phs.addColumn(UNumberIndex.class, "operator" ,2 );
+		phs.addColumn(FLOATIndex.class, "price" ,24,100,0 );
+		phs.addColumn(BooleanIndex.class, "ismy"  );
+		phs.addColumn(UNumberIndex.class, "city" ,14 );
+		phs.addColumn(DateIndex.class, "create_time" );//35
+		
+		JSONObject json = (JSONObject)JSONObject.toJSON(dbMeta);
+		System.out.println(json.toJSONString());
+		dbMeta = JSONObject.parseObject(json.toJSONString(), DBMeta.class);
+		IXyDB db = new XyDB();
+		db.init(dbMeta);
+		db.load();
+		
+		IXyTable t = db.getTable("t_ph");
+		while(true) {
+			System.out.print("xiegh [datapath]>");
+			int rowId = Integer.parseInt(sc.nextLine());
+			System.out.println(t.read(rowId));
+		}
+	}
 	public static void main(String[] args) throws Exception {
+		System.out.println("v1.1");
 		Scanner sc = new Scanner(System.in);
 		System.out.print("todo init or test>");
-		if("test".equals( sc.nextLine() )) {
+		String op = sc.nextLine() ;
+		if("test".equals( op)) {
 			test(sc);
-		}else {
+		}else if("init".equals( op)){
 			init(sc);
+		}else if("show".equals( op)){
+			show(sc);
+		}else if("x".equals( op)) {
+			System.out.print("123456");
+			Thread.sleep(3000);
+			System.out.print("\b \b");
+			
+			Thread.sleep(7000);
+			System.out.println("xxxxxx");
 		}
 		
 //		table.saveRow(String.format("%s/%s/%s",dbMeta.getDataPath(),dbMeta.getName(),  tableName), id);

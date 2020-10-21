@@ -122,6 +122,8 @@ public class BitQListenerImpl extends BitQBaseListener{
 			if(or!=null) {
 				//执行where过滤
 				handleOr(or,caches,0);
+			}else {
+				caches.get(0).copyFrom( table.getMask() );
 			}
 			//统计命中条数
 			this.count = caches.get(0).cardinality();
