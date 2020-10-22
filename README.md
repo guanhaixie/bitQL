@@ -33,7 +33,7 @@ mvn install
 
 ![测试](https://images.gitee.com/uploads/images/2020/1020/202123_8dfe16fd_5337335.jpeg)
 
-1亿条数据随机生成并写入库中，耗时 780秒 
+ **1亿条数据随机生成并写入库中，耗时 780秒**  
 
 2.测试报告
 
