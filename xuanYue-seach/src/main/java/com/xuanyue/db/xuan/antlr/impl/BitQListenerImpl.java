@@ -263,7 +263,12 @@ public class BitQListenerImpl extends BitQBaseListener{
 		IBitIndex r = caches.get(from);
 		r.setAll(false);
 		handleAnd(andlist.get(0),caches,from+1);
-		r.or(caches.get(from+1));
+		
+		if(or.NOT()==null){
+			r.or(caches.get(from+1));
+		}else {
+			r.orNot(caches.get(from+1));
+		}
 		for(int i=1;i<andlist.size();i++) {
 			handleAnd(andlist.get(i),caches,from+1);
 			if(null!=ons.get(i-1).NOT()) {
@@ -322,7 +327,7 @@ public class BitQListenerImpl extends BitQBaseListener{
 				throw new IndexException("method : "+method +" not support");
 			}
 			
-			table.expr(fn.getText(), method, valueOfStr(phone.STRING().getText()), caches);
+			table.expr(fn.getText(), method, valueOfStr(phone.STRING().getText()), caches.subList(from, caches.size()));
 			return;
 		}
 		

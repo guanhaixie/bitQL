@@ -101,17 +101,33 @@ public class Main {
 		
 		while(true) {
 			QueryRequest re = new QueryRequest();
-			System.out.print("xiegh [sql]>");
-			re.setSql(sc.nextLine());
-			//re.setSql("select phone,price,create_time from T_PH where price>2000f and ismy=true and city>3 order by price  limit 12000000,10;");
+			String sql = null;
+			a:while(true) {
+				System.out.print("xiegh [sql]>");
+				sql = sc.nextLine();
+				if(sql==null||sql.length()==0||sql.trim().length()==0) {
+					continue a;
+				}else {
+					break a;
+				}
+			}
+			re.setSql(sql);
+			//re.setSql("select phone,price,create_time from T_PH where   Phone_seach(phone,Contains,'999') price>2000f and ismy=true and city>3 order by price  limit 12000000,10;");
 //			re.setSql(args[1]);
 			QueryResult x = null;
 			System.out.println();
 			System.out.println(new Date());
 			long now = System.currentTimeMillis();
-			System.out.print("xiegh [times int]>");
-			
-			int times = Integer.parseInt( sc.nextLine() );
+			int times = 0;
+			b:while(true) {
+				System.out.print("xiegh [times int]>");
+				try {
+					times = Integer.parseInt( sc.nextLine() );
+					break b;
+				} catch (NumberFormatException e1) {
+					e1.printStackTrace();
+				}
+			}
 			for(int i=0;i<times;i++) {
 				x = SeachContext.query(re);
 			}

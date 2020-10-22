@@ -226,7 +226,9 @@ public class PhoneIndex implements IColumn<String>{
 			this.contains(caches.get(0), caches.get(1), v.toString());
 		}else if("positionmatch".equals(method.toLowerCase())){
 			this.positionMatch(caches.get(0), v.toString());
-		}else{
+		}else if("has_every_char".equals(method.toLowerCase())){
+			this.hasEveryChar(caches.get(0), caches.get(1), v.toString());
+		}else {
 			throw new IndexException(  this.getClass().getName()+ " not support " + method);
 		}
 	}

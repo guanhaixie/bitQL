@@ -12,7 +12,7 @@ repo: fullName (',' fullName)*;
 tablePart: tjoinPart|fullName;
 tjoinPart: fullName  ((LEFT|RIGHT) JOIN fullName ON orCondition)*;
 
-orCondition : andCondition (operator=orNot  andCondition)*;
+orCondition : NOT? andCondition (operator=orNot  andCondition)*;
 andCondition : conditionElement (operator=andNot conditionElement)*;
 conditionElement:  groupCondition|conditionExpr;
 groupCondition:  '(' orCondition ')';
