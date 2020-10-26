@@ -120,7 +120,10 @@ public class FLOATIndex implements IColumn<Float>{
 		data.save(String.format("%s/data", path));
 		Savor.write(eNum, String.format("%s/eNum",path));
 	}
-
+	@Override
+	public void toBatchLoadMode(String path) {
+		data.toBatchLoadMode(String.format("%s/data", path));
+	}
 	@Override
 	public void load(String path) throws Exception {
 		File p = new File(path);

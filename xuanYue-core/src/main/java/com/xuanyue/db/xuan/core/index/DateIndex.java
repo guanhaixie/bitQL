@@ -118,7 +118,10 @@ public class DateIndex implements IColumn<Date>{
 		}
 		data.save(String.format("%s/data", path));
 	}
-
+	@Override
+	public void toBatchLoadMode(String path) {
+		data.toBatchLoadMode(String.format("%s/data", path));
+	}
 	@Override
 	public void load(String path) throws Exception {
 		File p = new File(path);

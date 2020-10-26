@@ -47,6 +47,14 @@ public class MapUNumberIndex implements IColumn<Map<String,Long>>{
 	}
 
 	@Override
+	public void toBatchLoadMode(String path) {
+		for(Entry<String,UNumberIndex> kv:name2BitIndex.entrySet()) {
+			kv.getValue().toBatchLoadMode(String.format("%s/name2BitIndex/%s", path,name2Id.get(kv.getKey())));
+		}
+		mask = new BatchBitIndex(String.format("%s/mask", path));
+	}
+	
+	@Override
 	public void load(String path) throws Exception {
 		size = Savor.read( String.format("%s/size",path));
 		name2Id = Savor.read( String.format("%s/name2Id",path));

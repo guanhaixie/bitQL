@@ -59,4 +59,6 @@ public interface IColumn<T> extends IPersistence{
 	public byte getType();
 	
 	public void init(String path)throws Exception;
+	
+	public void toBatchLoadMode(String path);
 }

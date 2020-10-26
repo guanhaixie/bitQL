@@ -143,7 +143,11 @@ public class NumberIndex implements IColumn<Long>{
 		if(data!=null)
 			data.save(String.format("%s/data", path));
 	}
-
+	@Override
+	public void toBatchLoadMode(String path) {
+		if(data!=null)
+			data.toBatchLoadMode(String.format("%s/data", path));
+	}
 	@Override
 	public void load(String path) throws Exception {
 		File p = new File(path);

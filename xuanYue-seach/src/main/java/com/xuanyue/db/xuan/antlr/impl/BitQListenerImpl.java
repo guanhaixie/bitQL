@@ -1,5 +1,9 @@
 package com.xuanyue.db.xuan.antlr.impl;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,14 +30,17 @@ import com.xuanyue.db.xuan.antlr.BitQParser.OrNotContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.Phone_seachContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.RepoContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.ResultContext;
+import com.xuanyue.db.xuan.antlr.BitQParser.SaveAsFileContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.SortByContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.SortEContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.To_dateContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.ValuesContext;
 import com.xuanyue.db.xuan.core.exception.IndexException;
 import com.xuanyue.db.xuan.core.exception.SQLException;
+import com.xuanyue.db.xuan.core.index.BitIndexIterator;
 import com.xuanyue.db.xuan.core.table.IBitIndex;
 import com.xuanyue.db.xuan.core.table.ISortElement;
+import com.xuanyue.db.xuan.core.table.IStringEncoding;
 import com.xuanyue.db.xuan.core.table.IXyTable;
 import com.xuanyue.db.xuan.core.table.sort.LimitHandler;
 /**
@@ -234,17 +241,66 @@ public class BitQListenerImpl extends BitQBaseListener{
 				LimitHandler handler = new LimitHandler(caches,sort!=null,table.getMask());
 				indexs.addAll(handler.limit(sl, offset, num));
 			}
-			//组织结果
-			Map<Integer,Object> rx = null;
-			Map<String,Object> tmp = null;
-			for (int j:indexs) {
-				rx = new HashMap<>();
-				tmp = table.read(j);
-				for(int i=0;i<fl.size();i++) {
-					rx.put(i,tmp.get(fl.get(i)));
+			SaveAsFileContext saveFile = ctx.saveAsFile();
+			if(saveFile!=null) {
+				TerminalNode tarFile = saveFile.STRING();
+				File tf = new File(valueOfStr(tarFile.getText()));
+				BufferedWriter  bw = new BufferedWriter( new OutputStreamWriter( new FileOutputStream(tf), "UTF-8"));
+				IStringEncoding enc = new StringEncoding();
+				
+				int size = fl.size();
+				for(int i=0;i<size;i++) {
+					bw.write(fl.get(i));
+					if(i<size-1) {
+						bw.write("\t");
+					}
 				}
-				r.add(rx);
+				
+				if(limit==null) {
+					IBitIndex where = caches.get(0);
+					where.and(table.getMask());
+					BitIndexIterator iter = new BitIndexIterator(where);
+					Map<String,Object> tmp = null;
+					
+					while(iter.hasNext()) {
+						tmp = table.read(iter.next());
+						bw.write("\n");
+						for(int i=0;i<size;i++) {
+							bw.write(enc.encoding(tmp.get(fl.get(i))));
+							if(i<size-1) {
+								bw.write("\t");
+							}
+						}
+					}
+				}else {
+					Map<String,Object> tmp = null;
+					for (int j:indexs) {
+						tmp = table.read(j);
+						bw.write("\n");
+						for(int i=0;i<size;i++) {
+							bw.write(enc.encoding(tmp.get(fl.get(i))));
+							if(i<size-1) {
+								bw.write("\t");
+							}
+						}
+					}
+				}
+				bw.flush();
+				bw.close();
+			}else {
+				//组织结果
+				Map<Integer,Object> rx = null;
+				Map<String,Object> tmp = null;
+				for (int j:indexs) {
+					rx = new HashMap<>();
+					tmp = table.read(j);
+					for(int i=0;i<fl.size();i++) {
+						rx.put(i,tmp.get(fl.get(i)));
+					}
+					r.add(rx);
+				}
 			}
+			
 		} catch (Exception e) {
 			throw new IndexException(e);
 		}finally {
@@ -367,7 +423,7 @@ public class BitQListenerImpl extends BitQBaseListener{
 			if(ivs.contains(".")  ||ivs.contains("f")) {
 				v = Float.parseFloat(ivs);
 			}else if(ivs.contains("l")){
-				v = Long.parseLong( ivs);
+				v = Long.parseLong( ivs.substring(0, ivs.length()-1));
 			}else {
 				v = Integer.parseInt(ivs);
 			}

@@ -19,7 +19,7 @@ import com.xuanyue.db.xuan.core.table.ISortElement;
  * @date 2020年6月23日
  * @version 0.1
  */
-public final class ListUnumberIndex implements IColumn<String>{
+public final class ListUnumberIndex implements IColumn<List<Long>>{
 
 	
 	private List<UNumberIndex> data;
@@ -37,7 +37,12 @@ public final class ListUnumberIndex implements IColumn<String>{
 			data.get(i).save(String.format("%s/%s", path,i));
 		}
 	}
-
+	@Override
+	public void toBatchLoadMode(String path) {
+		for(int i=0;i<data.size();i++) {
+			data.get(i).toBatchLoadMode(String.format("%s/%s", path,i));
+		}
+	}
 	@Override
 	public void load(String path) throws Exception {
 		for(int i=0;i<data.size();i++) {
@@ -50,8 +55,8 @@ public final class ListUnumberIndex implements IColumn<String>{
 		if(!p.exists()) {
 			p.mkdirs();
 		}
-		for(UNumberIndex d:data) {
-			d.init(String.format("%s/data", path));
+		for(int i=0;i<data.size();i++) {
+			data.get(i).init(String.format("%s/%s", path,i));
 		}
 		
 	}
@@ -92,15 +97,14 @@ public final class ListUnumberIndex implements IColumn<String>{
 				e.set(rowId, null);
 			});
 		}else {
-			
-			
-			
-			String[] ts = value.toString().split(",");
+			@SuppressWarnings("unchecked")
+			List<Long> ts = (List<Long>)value;
+			if(ts.size()>data.size()) {
+				throw new IndexException("value is too big , value size is "+ts.size()+"  data size is "+data.size());
+			}
 			int i=0;
-			for(;i<ts.length&&i<data.size();i++) {
-				if(ts[i].trim().length()>0) {
-					data.get(i).set(rowId, Long.parseLong(ts[i].trim()));
-				}
+			for(;i<ts.size();i++) {
+				data.get(i).set(rowId, ts.get(i));
 			}
 			for(;i<data.size();i++) {
 				data.get(i).set(rowId,null);
@@ -110,27 +114,38 @@ public final class ListUnumberIndex implements IColumn<String>{
 	}
 
 	@Override
-	public String get(int rowId) {
-		StringBuffer r = new StringBuffer();
+	public List<Long> get(int rowId) {
+//		StringBuffer r = new StringBuffer();
+		List<Long> r = new ArrayList<Long>();
 		data.forEach(e->{
 			Long v = e.get(rowId);
 			if(v!=null) {
-				if(r.length()>0) {
-					r.append(",");
-				}
-				r.append(v);
+				r.add(v);
 			}
 		});
-		if(r.length()==0) {
-			return null;
-		}
-		return r.toString();
+		return r;
 	}
 
 	@Override
-	public void expr(String method, Object value, List<IBitIndex> caches) {
-		// TODO Auto-generated method stub
-		
+	public void expr(String method, Object valueO, List<IBitIndex> caches) {
+		Number value = null;
+		if(valueO!=null) {
+			if(valueO instanceof Integer) {
+				value = (int)valueO;
+			}else if(valueO instanceof Long) {
+				value = (long)valueO;
+			}
+		}
+		IBitIndex r = caches.get(0);
+		r.setAll(false);
+		if("contains".equals(method.toLowerCase())) {
+			for(UNumberIndex e:data) {
+				e.equeals(caches.get(1), null, value);
+				r.or(caches.get(1));
+			}
+		}else {
+			throw new IndexException(" not support the method "+method);		
+		}
 	}
 
 	@Override
@@ -151,8 +166,7 @@ public final class ListUnumberIndex implements IColumn<String>{
 
 	@Override
 	public List<ISortElement> getSortE(boolean isDesc, String... names) {
-		
-		return null;
+		throw new IndexException(" not support the method getSortE");
 	}
 
 	@Override

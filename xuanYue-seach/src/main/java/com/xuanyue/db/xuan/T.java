@@ -20,10 +20,7 @@ public class T {
 //		log.info("xiegh> data path:");
 //		String name = sc.nextLine();
 //		log.info("xiegh> data path:"+name);
-		System.out.println("12345");
-		Thread.sleep(5000);
-		System.out.println("\b\b");
-		Scanner sc = new Scanner(System.in);
+		System.out.println(Long.parseLong("123l"));
 		
 	}
 

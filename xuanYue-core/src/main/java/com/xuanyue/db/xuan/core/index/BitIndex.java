@@ -29,7 +29,7 @@ public class BitIndex implements IBitIndex{
 	
 	private AtomicLong version = new AtomicLong();
 	private Map<Integer,IXGHBitSet> splits = new HashMap<>();
-	private int maxId;
+	protected int maxId;
 	public Map<Integer,IXGHBitSet> getSplits(){
 		return splits;
 	}

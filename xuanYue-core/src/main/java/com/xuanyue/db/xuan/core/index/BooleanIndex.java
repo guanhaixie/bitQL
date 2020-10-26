@@ -23,6 +23,7 @@ public class BooleanIndex implements  IColumn<Boolean>{
 	private static Logger log= LoggerFactory.getLogger(BooleanIndex.class);
 	private IBitIndex data = new BitIndex();
 	private IBitIndex mask = new BitIndex();
+	
 	@Override
 	public void flush(int maxId) {
 		data.flush(maxId);
@@ -108,7 +109,10 @@ public class BooleanIndex implements  IColumn<Boolean>{
 		data.save(String.format("%s/data", path));
 		mask.save(String.format("%s/mask", path));
 	}
-
+	public void toBatchLoadMode(String path) {
+		data = new BatchBitIndex(String.format("%s/data", path));
+		mask = new BatchBitIndex(String.format("%s/mask", path));
+	}
 	@Override
 	public void load(String path) throws Exception {
 		File p = new File(path);

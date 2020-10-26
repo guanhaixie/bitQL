@@ -50,7 +50,13 @@ public class MapBooleanIndex implements IColumn<Map<String,Boolean>>{
 		Savor.write(name2Id, String.format("%s/name2Id",path));
 		mask.save(String.format("%s/mask",path));
 	}
-
+	@Override
+	public void toBatchLoadMode(String path) {
+		for(Entry<String,BitIndex> kv:name2BitIndex.entrySet()) {
+			name2BitIndex.put(kv.getKey(), new BatchBitIndex(String.format("%s/name2BitIndex/%s", path,name2Id.get(kv.getKey()))) );
+		}
+		mask = new BatchBitIndex(String.format("%s/mask", path));
+	}
 	@Override
 	public void load(String path) throws Exception {
 		name2Id = Savor.read( String.format("%s/name2Id",path));

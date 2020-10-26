@@ -91,6 +91,16 @@ public interface BitQListener extends ParseTreeListener {
 	 */
 	void exitRepo(@NotNull BitQParser.RepoContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link BitQParser#saveAsFile}.
+	 * @param ctx the parse tree
+	 */
+	void enterSaveAsFile(@NotNull BitQParser.SaveAsFileContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BitQParser#saveAsFile}.
+	 * @param ctx the parse tree
+	 */
+	void exitSaveAsFile(@NotNull BitQParser.SaveAsFileContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link BitQParser#values}.
 	 * @param ctx the parse tree
 	 */

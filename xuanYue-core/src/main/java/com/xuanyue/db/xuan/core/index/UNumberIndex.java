@@ -54,6 +54,13 @@ public class UNumberIndex implements IColumn<Long>{
 		mask.save(String.format("%s/mask", path));
 		for(Entry<Integer,IBitIndex> en:positionV2bit.entrySet()) {
 			en.getValue().save(String.format("%s/positionV2bit/%s", path,en.getKey()));
+		} 
+	}
+	@Override
+	public void toBatchLoadMode(String path) {
+		mask = new BatchBitIndex(String.format("%s/mask", path));
+		for(Entry<Integer,IBitIndex> en:positionV2bit.entrySet()) {
+			positionV2bit.put(en.getKey(), new BatchBitIndex(String.format("%s/positionV2bit/%s", path,en.getKey()) )  );
 		}
 	}
 	@Override

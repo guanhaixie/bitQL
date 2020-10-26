@@ -107,4 +107,8 @@ public interface IXyTable extends IPersistence{
 	 * @throws Exception
 	 */
 	public void saveRow(String path,int rowId)throws Exception;
+	
+	
+	public void toBatchLoadMode(String path);
+	
 }

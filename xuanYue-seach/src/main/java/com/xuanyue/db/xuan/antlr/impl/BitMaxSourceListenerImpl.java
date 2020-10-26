@@ -154,7 +154,7 @@ public class BitMaxSourceListenerImpl extends BitQBaseListener{
 			if(ivs.contains(".")  ||ivs.contains("f")) {
 				v = Float.parseFloat(ivs);
 			}else if(ivs.contains("l")){
-				v = Long.parseLong( ivs);
+				v = Long.parseLong( ivs.substring(0, ivs.length()-1));
 			}else {
 				v = Integer.parseInt(ivs);
 			}

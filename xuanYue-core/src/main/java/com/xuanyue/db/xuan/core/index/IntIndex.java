@@ -24,7 +24,10 @@ public class IntIndex implements IColumn<Integer>{
 	public void save(String path) throws Exception {
 		data.save(path);
 	}
-
+	@Override
+	public void toBatchLoadMode(String path) {
+		data.toBatchLoadMode(path);
+	}
 	@Override
 	public void load(String path) throws Exception {
 		data.load(path);

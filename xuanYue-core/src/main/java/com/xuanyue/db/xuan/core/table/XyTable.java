@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.xuanyue.db.xuan.core.exception.IndexException;
+import com.xuanyue.db.xuan.core.index.BatchBitIndex;
 import com.xuanyue.db.xuan.core.index.BitIndex;
 import com.xuanyue.db.xuan.core.tools.SafeManager;
 import com.xuanyue.db.xuan.core.tools.Savor;
@@ -46,7 +47,12 @@ public class XyTable implements IXyTable{
 		f.setMaxId(maxId);
 		manager = new SafeManager<IBitIndex>(f,querySource);
 	}
-	
+	public void toBatchLoadMode(String path) {
+		mask = new BatchBitIndex(String.format("%s/mask",path));
+		for(Entry<String,IColumn<?>> en:name2column.entrySet()) {
+			en.getValue().toBatchLoadMode(String.format("%s/%s", path,en.getKey()));
+		}
+	}
 	private ReadWriteLock getReadWriteLock(int index) {
 		int split = index/64000;
 		if(!locks.containsKey(split)) {
@@ -93,17 +99,17 @@ public class XyTable implements IXyTable{
 		if(vs==null) {
 			throw new IndexException("insertInto value is null");
 		}
-		Map<String,Object> vx = new HashMap<String,Object>();
-		vs.forEach( (k,v)->{
-			vx.put(k.toLowerCase(), v);
-		});
+//		Map<String,Object> vx = new HashMap<String,Object>();
+//		vs.forEach( (k,v)->{
+//			vx.put(k.toLowerCase(), v);
+//		});
 		int rowId = nextRowId();
 		ReadWriteLock rwl = this.getReadWriteLock(rowId);
 		Lock lock = rwl.writeLock();
 		try {
 			lock.lock();
 			name2column.forEach( (k,v)->{
-				v.set(rowId, vx.get(k));
+				v.set(rowId, vs.get(k));
 				v.flush(rowId);
 			});
 			mask.set(rowId);
@@ -169,6 +175,7 @@ public class XyTable implements IXyTable{
 			return;
 		}
 		for(Entry<String,IColumn<?>> en:name2column.entrySet()) {
+			log.debug(String.format("to load: %s/%s", path,en.getKey()));
 			en.getValue().load(String.format("%s/%s", path,en.getKey()));
 		} 
 		AtomicInteger maxId=Savor.read( String.format("%s/maxId",path));
