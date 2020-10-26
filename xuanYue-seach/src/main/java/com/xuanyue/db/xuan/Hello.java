@@ -146,6 +146,7 @@ public class Hello {
 	public static void main(String[] args) throws Exception {
 		//test();
 		long s = System.currentTimeMillis();
+		//init(100000000, "d:/data2");
 		test("d:/data2");
 		long e = System.currentTimeMillis();
 		System.out.println(e-s);
