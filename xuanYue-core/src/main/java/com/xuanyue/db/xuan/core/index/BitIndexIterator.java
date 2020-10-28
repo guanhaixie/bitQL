@@ -3,7 +3,14 @@ package com.xuanyue.db.xuan.core.index;
 import java.util.Iterator;
 
 import com.xuanyue.db.xuan.core.table.IBitIndex;
-
+/**
+ * bit向量 迭代器
+ *
+ * @author 解观海
+ * @email guanhaixie@sina.cn
+ * @date 2020年10月27日
+ *
+ */
 public class BitIndexIterator implements Iterator<Integer> {
 
 	private IBitIndex bitIndex;

@@ -15,12 +15,18 @@ import com.xuanyue.db.xuan.antlr.impl.BitMaxSourceListenerImpl;
 import com.xuanyue.db.xuan.antlr.impl.BitQListenerImpl;
 import com.xuanyue.db.xuan.antlr.impl.QueryRequest;
 import com.xuanyue.db.xuan.antlr.impl.QueryResult;
-import com.xuanyue.db.xuan.core.db.DBMeta;
 import com.xuanyue.db.xuan.core.db.IXyDB;
-import com.xuanyue.db.xuan.core.db.XyDB;
 import com.xuanyue.db.xuan.core.table.IXyTable;
 import com.xuanyue.db.xuan.core.tools.LruCache;
 
+/**
+ * 查询引擎的上下文
+ *
+ * @author 解观海
+ * @email guanhaixie@sina.cn
+ * @date 2020年10月27日
+ *
+ */
 public class SeachContext {
 
 	private static IXyDB db;

@@ -11,7 +11,6 @@ import com.xuanyue.db.xuan.core.tools.Savor;
 public class KeyDensification implements IPersistence{
 
 	private int[] indexes;
-	private RandomAccessFile rw;
 	private AtomicInteger next = new AtomicInteger(1);
 	private ReadWriteLock lock = new ReentrantReadWriteLock();
 	public int getMapKey(Number data) throws Exception {

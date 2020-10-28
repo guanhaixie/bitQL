@@ -147,7 +147,7 @@ public class Hello {
 		//test();
 		long s = System.currentTimeMillis();
 		//init(100000000, "d:/data2");
-		test("d:/data2");
+		test("d:/data");
 		long e = System.currentTimeMillis();
 		System.out.println(e-s);
 	}
