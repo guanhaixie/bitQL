@@ -43,20 +43,11 @@ public class BatchBitIndex extends BitIndex {
 		}
 	}
 
-	
-	
-	
 	@Override
 	public synchronized void flush(int maxId) {
 		if(this.maxId<maxId) {
 			this.maxId = maxId;
 		}
-	}
-
-	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		// TODO Auto-generated method stub
-		return super.clone();
 	}
 
 	@Override
