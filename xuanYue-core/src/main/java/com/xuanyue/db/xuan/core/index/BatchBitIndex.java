@@ -62,10 +62,15 @@ public class BatchBitIndex extends BitIndex {
 		if(!f.exists()) {
 			f.mkdirs();
 		}
-		RandomAccessFile rw = new RandomAccessFile(String.format("%s/xyy.sun", path),"rwd");
-		rw.seek(this.split*cache.length);
-		rw.write(splitSet.toByteArray(cache));
-		rw.close();
+		RandomAccessFile rw = null;//new RandomAccessFile(String.format("%s/xyy.sun", path),"rwd");
+		try {
+			rw = new RandomAccessFile(String.format("%s/xyy.sun", path),"rwd");
+			rw.seek(this.split*cache.length);
+			rw.write(splitSet.toByteArray(cache));
+			rw.close();
+		} finally {
+			if(rw!=null) rw.close();
+		}
 		Savor.write(maxId, String.format("%s/maxId",path));
 	}
 

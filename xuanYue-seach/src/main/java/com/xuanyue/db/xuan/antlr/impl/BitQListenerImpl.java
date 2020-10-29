@@ -245,48 +245,56 @@ public class BitQListenerImpl extends BitQBaseListener{
 			if(saveFile!=null) {
 				TerminalNode tarFile = saveFile.STRING();
 				File tf = new File(valueOfStr(tarFile.getText()));
-				BufferedWriter  bw = new BufferedWriter( new OutputStreamWriter( new FileOutputStream(tf), "UTF-8"));
-				IStringEncoding enc = new StringEncoding();
+				BufferedWriter  bw = null;// new BufferedWriter( new OutputStreamWriter( new FileOutputStream(tf), "UTF-8"));
 				
-				int size = fl.size();
-				for(int i=0;i<size;i++) {
-					bw.write(fl.get(i));
-					if(i<size-1) {
-						bw.write("\t");
-					}
-				}
-				
-				if(limit==null) {
-					IBitIndex where = caches.get(0);
-					where.and(table.getMask());
-					BitIndexIterator iter = new BitIndexIterator(where);
-					Map<String,Object> tmp = null;
+				try {
+					bw = new BufferedWriter( new OutputStreamWriter( new FileOutputStream(tf), "UTF-8"));
+					IStringEncoding enc = new StringEncoding();
 					
-					while(iter.hasNext()) {
-						tmp = table.read(iter.next());
-						bw.write("\n");
-						for(int i=0;i<size;i++) {
-							bw.write(enc.encoding(tmp.get(fl.get(i))));
-							if(i<size-1) {
-								bw.write("\t");
+					int size = fl.size();
+					for(int i=0;i<size;i++) {
+						bw.write(fl.get(i));
+						if(i<size-1) {
+							bw.write("\t");
+						}
+					}
+					
+					if(limit==null) {
+						IBitIndex where = caches.get(0);
+						where.and(table.getMask());
+						BitIndexIterator iter = new BitIndexIterator(where);
+						Map<String,Object> tmp = null;
+						
+						while(iter.hasNext()) {
+							tmp = table.read(iter.next());
+							bw.write("\n");
+							for(int i=0;i<size;i++) {
+								bw.write(enc.encoding(tmp.get(fl.get(i))));
+								if(i<size-1) {
+									bw.write("\t");
+								}
+							}
+						}
+					}else {
+						Map<String,Object> tmp = null;
+						for (int j:indexs) {
+							tmp = table.read(j);
+							bw.write("\n");
+							for(int i=0;i<size;i++) {
+								bw.write(enc.encoding(tmp.get(fl.get(i))));
+								if(i<size-1) {
+									bw.write("\t");
+								}
 							}
 						}
 					}
-				}else {
-					Map<String,Object> tmp = null;
-					for (int j:indexs) {
-						tmp = table.read(j);
-						bw.write("\n");
-						for(int i=0;i<size;i++) {
-							bw.write(enc.encoding(tmp.get(fl.get(i))));
-							if(i<size-1) {
-								bw.write("\t");
-							}
-						}
-					}
+					bw.flush();
+				} finally {
+					if(bw!=null)bw.close();
 				}
-				bw.flush();
-				bw.close();
+				
+				
+				
 			}else {
 				//组织结果
 				Map<Integer,Object> rx = null;

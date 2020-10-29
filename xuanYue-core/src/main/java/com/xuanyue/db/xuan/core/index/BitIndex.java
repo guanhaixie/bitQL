@@ -192,16 +192,23 @@ public class BitIndex implements IBitIndex{
 		byte[] cache = new byte[splitSize];
 		int maxSplit = getSplit(maxId);
 		for(int i=0;i<=maxSplit;i++) {
-			RandomAccessFile rw = new RandomAccessFile(String.format("%s/splits/%s", path,i),"rw");
-			if(splits.containsKey(i) ) {
-				rw.write(splits.get(i).toByteArray(cache));
-			}else {
-				for(int j=0;j<splitSize;j++) {//重置为0
-					cache[i]=0;
+			RandomAccessFile rw = null;//new RandomAccessFile(String.format("%s/splits/%s", path,i),"rw");
+			try {
+				rw = new RandomAccessFile(String.format("%s/splits/%s", path,i),"rw");
+				if(splits.containsKey(i) ) {
+					rw.write(splits.get(i).toByteArray(cache));
+				}else {
+					for(int j=0;j<splitSize;j++) {//重置为0
+						cache[i]=0;
+					}
+					rw.write(cache);
 				}
-				rw.write(cache);
+			} finally {
+				if(rw!=null) rw.close();
 			}
-			rw.close();
+			
+			
+			
 		}
 		Savor.write(maxId, String.format("%s/maxId",path));
 	}
@@ -214,19 +221,24 @@ public class BitIndex implements IBitIndex{
 		int splitSize = XGHBitSet.size();
 		byte[] cache = new byte[splitSize];
 		int maxSplit = getSplit(maxId);
-		RandomAccessFile rw = new RandomAccessFile(String.format("%s/xyy.sun", path),"rw");
-		for(int i=0;i<=maxSplit;i++) {
-			rw.seek(i*cache.length);
-			if(splits.containsKey(i) ) {
-				rw.write(splits.get(i).toByteArray(cache));
-			}else {
-				for(int j=0;j<splitSize;j++) {//重置为0
-					cache[i]=0;
+		RandomAccessFile rw = null;//new RandomAccessFile(String.format("%s/xyy.sun", path),"rw");
+		try {
+			rw = new RandomAccessFile(String.format("%s/xyy.sun", path),"rw");
+			for(int i=0;i<=maxSplit;i++) {
+				rw.seek(i*cache.length);
+				if(splits.containsKey(i) ) {
+					rw.write(splits.get(i).toByteArray(cache));
+				}else {
+					for(int j=0;j<splitSize;j++) {//重置为0
+						cache[i]=0;
+					}
+					rw.write(cache);
 				}
-				rw.write(cache);
 			}
+		} finally {
+			if(rw!=null)
+				rw.close();
 		}
-		rw.close();
 		Savor.write(maxId, String.format("%s/maxId",path));
 	}
 	@Override
@@ -238,12 +250,19 @@ public class BitIndex implements IBitIndex{
 		
 		int split = getSplit(rowId);
 		long word = splits.get(split).getWord(rowId%XGHBitSet.SET_SIZE);
-		RandomAccessFile rw = new RandomAccessFile(String.format("%s/xyy.sun", path),"rw");
-		rw.seek( 8*(rowId/64) );
-		byte[] result=new byte[8];
-		XGHBitSet.longToByteArray(result, word, 0);
-		rw.write( result );
-		rw.close();
+		RandomAccessFile rw = null;//new RandomAccessFile(String.format("%s/xyy.sun", path),"rw");
+		try {
+			rw = new RandomAccessFile(String.format("%s/xyy.sun", path),"rw");
+			rw.seek( 8*(rowId/64) );
+			byte[] result=new byte[8];
+			XGHBitSet.longToByteArray(result, word, 0);
+			rw.write( result );
+		} finally {
+			if(rw!=null)
+				rw.close();
+		}
+		
+		
 	}
 	
 	public void loadV1(String path) throws Exception {
@@ -254,10 +273,16 @@ public class BitIndex implements IBitIndex{
 		p=new File(String.format("%s/splits", path));
 		byte[] cache = new byte[XGHBitSet.size()];
 		for(File s:p.listFiles()) {
-			RandomAccessFile rw = new RandomAccessFile(s,"r");
-			rw.read(cache);
-			splits.put(Integer.parseInt( s.getName()  ), new XGHBitSet(cache));
-			rw.close();
+			RandomAccessFile rw = null;//new RandomAccessFile(s,"r");
+			try {
+				rw = new RandomAccessFile(s,"r");
+				rw.read(cache);
+				splits.put(Integer.parseInt( s.getName()  ), new XGHBitSet(cache));
+			} finally {
+				if(rw!=null)rw.close();
+			}
+			
+			
 		}
 		maxId = Savor.read(String.format("%s/maxId",path));
 		this.flush(maxId);
@@ -272,13 +297,17 @@ public class BitIndex implements IBitIndex{
 		maxId = Savor.read(String.format("%s/maxId",path));
 		int maxSplit = getSplit(maxId);
 		byte[] cache = new byte[XGHBitSet.size()];
-		RandomAccessFile r = new RandomAccessFile(String.format("%s/xyy.sun", path),"r");
-		for(int i=0;i<=maxSplit;i++) {
-			r.seek(i*cache.length);
-			r.read(cache);
-			splits.put(i, new XGHBitSet(cache, i==maxSplit?(maxId%XGHBitSet.SET_SIZE  ):(XGHBitSet.SET_SIZE-1)  ));
+		RandomAccessFile r = null;//new RandomAccessFile(String.format("%s/xyy.sun", path),"r");
+		try {
+			r = new RandomAccessFile(String.format("%s/xyy.sun", path),"r");
+			for(int i=0;i<=maxSplit;i++) {
+				r.seek(i*cache.length);
+				r.read(cache);
+				splits.put(i, new XGHBitSet(cache, i==maxSplit?(maxId%XGHBitSet.SET_SIZE  ):(XGHBitSet.SET_SIZE-1)  ));
+			}
+		} finally {
+			if(r!=null)r.close();
 		}
-		r.close();
 		this.flush(maxId);
 	}
 	@Override

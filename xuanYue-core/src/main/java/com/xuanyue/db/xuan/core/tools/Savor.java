@@ -17,20 +17,28 @@ public class Savor {
 		if(f.exists()) {
 			f.delete();
 		}
-		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f));
-		oos.writeObject(t);
-		oos.flush();
-		oos.close();
+		ObjectOutputStream oos = null;//new ObjectOutputStream(new FileOutputStream(f));
+		try {
+			oos = new ObjectOutputStream(new FileOutputStream(f));
+			oos.writeObject(t);
+			oos.flush();
+		} finally {
+			if(oos!=null)oos.close();
+		}
 	}
 	
 	public static <T>T read(String path) throws Exception{
 		File f = new File(path);
 		if(f.exists()) {
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
-			@SuppressWarnings("unchecked")
-			T b = (T)ois.readObject();
-			ois.close();
-			return b;
+			ObjectInputStream ois = null;// new ObjectInputStream(new FileInputStream(f));
+			try {
+				ois = new ObjectInputStream(new FileInputStream(f));
+				@SuppressWarnings("unchecked")
+				T b = (T)ois.readObject();
+				return b;
+			} finally {
+				if (ois!=null)ois.close();
+			}
 		}
 		return null;
 	}

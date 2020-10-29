@@ -44,20 +44,30 @@ public class KeyDensification implements IPersistence{
 	public void save(String path) throws Exception {
 		int len = indexes.length;
 		Savor.write(len, String.format("%s/indexes.length",path));
-		RandomAccessFile rw = new RandomAccessFile(String.format("%s/data.kd",path),"rw");
-		for(int i=0;i<len;i++) {
-			rw.writeInt(indexes[i]);
+		RandomAccessFile rw = null;// new RandomAccessFile(String.format("%s/data.kd",path),"rw");
+		try {
+			rw = new RandomAccessFile(String.format("%s/data.kd",path),"rw");
+			for(int i=0;i<len;i++) {
+				rw.writeInt(indexes[i]);
+			}
+		} finally {
+			if(rw!=null)rw.close();
 		}
-		rw.close();
+		
+		
 	}
 
 	@Override
 	public void load(String path) throws Exception {
 		int len = Savor.read(String.format("%s/indexes.length",path));
-		RandomAccessFile rw = new RandomAccessFile(String.format("%s/data.kd",path),"rw");
-		for(int i=0;i<len;i++) {
-			indexes[i] = rw.readInt();
+		RandomAccessFile rw = null;// new RandomAccessFile(String.format("%s/data.kd",path),"rw");
+		try {
+			rw = new RandomAccessFile(String.format("%s/data.kd",path),"rw");
+			for(int i=0;i<len;i++) {
+				indexes[i] = rw.readInt();
+			}
+		} finally {
+			if(rw!=null)rw.close();
 		}
-		rw.close();
 	}
 }
