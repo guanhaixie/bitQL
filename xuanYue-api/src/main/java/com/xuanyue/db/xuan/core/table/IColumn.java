@@ -9,7 +9,7 @@ import java.util.List;
  * @date 2020年6月23日
  *
  */
-public interface IColumn<T> extends IPersistence{
+public interface IColumn extends IPersistence{
 
 	//= 等
 	public void equeals(IBitIndex cache, IBitIndex now,Number value);
@@ -25,7 +25,7 @@ public interface IColumn<T> extends IPersistence{
 	public void set(int rowId,Object value);
 	public void saveRow(String path,int rowId)throws Exception;
 	//读取数据
-	public T get(int rowId);
+	public Object get(int rowId);
 	//通用的逻辑表达式  
 	public void expr(String method,Object value,List<IBitIndex> caches);
 	/**

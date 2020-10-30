@@ -13,7 +13,7 @@ import com.xuanyue.db.xuan.core.table.ISortElement;
  * @date 2020年6月23日
  * @version 0.1
  */
-public class UIntIndex implements IColumn<Integer>{
+public class UIntIndex implements IColumn{
 
 	private UNumberIndex data;
 	

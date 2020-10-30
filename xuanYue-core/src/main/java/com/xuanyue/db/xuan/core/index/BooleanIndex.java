@@ -19,7 +19,7 @@ import com.xuanyue.db.xuan.core.table.sort.SortElement;
  * @date 2020年6月23日
  * @version 0.1
  */
-public class BooleanIndex implements  IColumn<Boolean>{
+public class BooleanIndex implements  IColumn{
 	private static Logger log= LoggerFactory.getLogger(BooleanIndex.class);
 	private IBitIndex data = new BitIndex();
 	private IBitIndex mask = new BitIndex();

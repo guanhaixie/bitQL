@@ -20,7 +20,7 @@ import com.xuanyue.db.xuan.core.table.sort.SortElement;
  * @date 2020年6月23日
  * @version 0.1
  */
-public class UNumberIndex implements IColumn<Long>{
+public class UNumberIndex implements IColumn{
 	private HashMap<Integer,IBitIndex> positionV2bit = new HashMap<>();
 	private IBitIndex mask = new BitIndex();
 	private int maxBit=44;

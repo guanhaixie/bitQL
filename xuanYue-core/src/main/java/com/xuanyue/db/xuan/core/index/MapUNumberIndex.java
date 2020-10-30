@@ -19,7 +19,7 @@ import com.xuanyue.db.xuan.core.tools.Savor;
  * @date 2020年6月23日
  * @version 0.1
  */
-public class MapUNumberIndex implements IColumn<Map<String,Long>>{
+public class MapUNumberIndex implements IColumn{
 
 	private Map<String,UNumberIndex> name2BitIndex = new HashMap<>();
 	private IBitIndex mask = new BitIndex();

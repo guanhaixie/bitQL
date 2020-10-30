@@ -50,20 +50,20 @@ public class ColumnMeta{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T>IColumn<T> column() throws ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		Class<? extends IColumn<T>> cla = (Class<? extends IColumn<T>>) Class.forName(className);
+	public IColumn column() throws ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		Class<? extends IColumn> cla = (Class<? extends IColumn>) Class.forName(className);
 		if(parameters!=null&&parameters.size()>0) {
 			@SuppressWarnings("rawtypes")
 			Class[] types = new Class[parameters.size()];
 			for(int i=0;i<types.length;i++) {
 				types[i] = int.class;
 			}
-			Constructor<? extends IColumn<T>> c = cla.getDeclaredConstructor(types);
-			IColumn<T> r = c.newInstance(parameters.toArray());
+			Constructor<? extends IColumn> c = cla.getDeclaredConstructor(types);
+			IColumn r = c.newInstance(parameters.toArray());
 			return r;
 		}else if(name2Id!=null) {
-			Constructor<? extends IColumn<T>> c = cla.getDeclaredConstructor(Map.class);
-			IColumn<T> r = c.newInstance(name2Id);
+			Constructor<? extends IColumn> c = cla.getDeclaredConstructor(Map.class);
+			IColumn r = c.newInstance(name2Id);
 			return r;
 		}
 		return cla.newInstance();

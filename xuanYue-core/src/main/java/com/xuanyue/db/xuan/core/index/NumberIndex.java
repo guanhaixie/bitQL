@@ -24,7 +24,7 @@ import com.xuanyue.db.xuan.core.tools.Savor;
  * @date 2020年6月23日
  * @version 0.1
  */
-public class NumberIndex implements IColumn<Long>{
+public class NumberIndex implements IColumn{
 
 	
 	private long zero;//1:+ 0:-

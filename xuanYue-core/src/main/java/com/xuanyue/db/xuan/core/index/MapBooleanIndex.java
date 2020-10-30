@@ -24,7 +24,7 @@ import com.xuanyue.db.xuan.core.tools.Savor;
  * @date 2020年6月23日
  * @version 0.1
  */
-public class MapBooleanIndex implements IColumn<Map<String,Boolean>>{
+public class MapBooleanIndex implements IColumn{
 
 	private Map<String,BitIndex> name2BitIndex = new HashMap<>();
 	private BitIndex mask = new BitIndex();

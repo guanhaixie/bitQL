@@ -19,7 +19,7 @@ import com.xuanyue.db.xuan.core.table.ISortElement;
  * @date 2020年6月23日
  * @version 0.1
  */
-public final class ListUnumberIndex implements IColumn<List<Long>>{
+public final class ListUnumberIndex implements IColumn{
 
 	
 	private List<UNumberIndex> data;
@@ -115,7 +115,6 @@ public final class ListUnumberIndex implements IColumn<List<Long>>{
 
 	@Override
 	public List<Long> get(int rowId) {
-//		StringBuffer r = new StringBuffer();
 		List<Long> r = new ArrayList<Long>();
 		data.forEach(e->{
 			Long v = e.get(rowId);

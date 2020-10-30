@@ -30,7 +30,7 @@ import com.xuanyue.db.xuan.core.tools.Savor;
 public class XyTable implements IXyTable{
 	private static Logger log = LoggerFactory.getLogger(XyTable.class);
 	private String name;
-	private Map<String,IColumn<?>> name2column = new HashMap<>();
+	private Map<String,IColumn> name2column = new HashMap<>();
 	private Map<Integer,ReadWriteLock> locks = new HashMap<>();
 	private AtomicInteger maxId = new AtomicInteger();
 	private SafeManager<IBitIndex> manager;
@@ -49,7 +49,7 @@ public class XyTable implements IXyTable{
 	}
 	public void toBatchLoadMode(String path) {
 		mask = new BatchBitIndex(String.format("%s/mask",path));
-		for(Entry<String,IColumn<?>> en:name2column.entrySet()) {
+		for(Entry<String,IColumn> en:name2column.entrySet()) {
 			en.getValue().toBatchLoadMode(String.format("%s/%s", path,en.getKey()));
 		}
 	}
@@ -70,11 +70,11 @@ public class XyTable implements IXyTable{
 		return this.name;
 	}
 	@Override
-	public Map<String,IColumn<?>> getName2column(){
+	public Map<String,IColumn> getName2column(){
 		return name2column;
 	}
 	@Override
-	public void addColumn(String name,IColumn<?> column) {
+	public void addColumn(String name,IColumn column) {
 		name2column.put(name.toLowerCase(), column);
 	}
 	@Override
@@ -88,7 +88,7 @@ public class XyTable implements IXyTable{
 	@Override
 	public void expr(String fieldName,String op,Object v,List<IBitIndex> caches) {
 		log.debug(String.format(" %s %s %s",fieldName,op,v ));
-		IColumn<?> c = name2column.get(fieldName.toLowerCase());
+		IColumn c = name2column.get(fieldName.toLowerCase());
 		c.expr(op, v, caches);
 	}
 	private int nextRowId() {
@@ -99,10 +99,6 @@ public class XyTable implements IXyTable{
 		if(vs==null) {
 			throw new IndexException("insertInto value is null");
 		}
-//		Map<String,Object> vx = new HashMap<String,Object>();
-//		vs.forEach( (k,v)->{
-//			vx.put(k.toLowerCase(), v);
-//		});
 		int rowId = nextRowId();
 		ReadWriteLock rwl = this.getReadWriteLock(rowId);
 		Lock lock = rwl.writeLock();
@@ -143,7 +139,7 @@ public class XyTable implements IXyTable{
 	@Override
 	public int getDataSize() {
 		int r =0;
-		for(Entry<String,IColumn<?>> en:name2column.entrySet()) {
+		for(Entry<String,IColumn> en:name2column.entrySet()) {
 			r+=en.getValue().getDataSize();
 		}
 		return r;
@@ -154,14 +150,14 @@ public class XyTable implements IXyTable{
 	}
 	@Override
 	public synchronized void save(String path) throws Exception {
-		for(Entry<String,IColumn<?>> en:name2column.entrySet()) {
+		for(Entry<String,IColumn> en:name2column.entrySet()) {
 			en.getValue().save(String.format("%s/%s", path,en.getKey()));
 		}
 		Savor.write(maxId, String.format("%s/maxId",path));
 		mask.save(String.format("%s/mask",path));
 	}
 	public synchronized void saveRow(String path,int rowId)throws Exception{
-		for(Entry<String,IColumn<?>> en:name2column.entrySet()) {
+		for(Entry<String,IColumn> en:name2column.entrySet()) {
 			en.getValue().saveRow(String.format("%s/%s", path,en.getKey()),rowId);
 		}
 		Savor.write(maxId, String.format("%s/maxId",path));
@@ -174,12 +170,12 @@ public class XyTable implements IXyTable{
 			p.mkdirs();
 			return;
 		}
-		for(Entry<String,IColumn<?>> en:name2column.entrySet()) {
+		for(Entry<String,IColumn> en:name2column.entrySet()) {
 			log.debug(String.format("to load: %s/%s", path,en.getKey()));
 			en.getValue().load(String.format("%s/%s", path,en.getKey()));
 		} 
 		AtomicInteger maxId=Savor.read( String.format("%s/maxId",path));
-		for(Entry<String,IColumn<?>> en:name2column.entrySet()) {
+		for(Entry<String,IColumn> en:name2column.entrySet()) {
 			en.getValue().flush(maxId.get());
 		}
 		mask.load(String.format("%s/mask",path));
@@ -195,7 +191,7 @@ public class XyTable implements IXyTable{
 		if(init_lock.exists()) {
 			return;
 		}
-		for(Entry<String,IColumn<?>> en:name2column.entrySet()) {
+		for(Entry<String,IColumn> en:name2column.entrySet()) {
 			p = new File(String.format("%s/%s", path,en.getKey()));
 			p.mkdirs();
 			en.getValue().init(String.format("%s/%s", path,en.getKey()));
@@ -206,12 +202,12 @@ public class XyTable implements IXyTable{
 	}
 	@Override
 	public byte getType(String fn) {
-		IColumn<?> column = name2column.get(fn.toLowerCase());
+		IColumn column = name2column.get(fn.toLowerCase());
 		return column.getType();
 	}
 	@Override
 	public List<ISortElement> getSortE(String fn,boolean isDesc,String key){
-		IColumn<?> column = name2column.get(fn.toLowerCase());
+		IColumn column = name2column.get(fn.toLowerCase());
 		return column.getSortE(isDesc, key);
 	}
 	

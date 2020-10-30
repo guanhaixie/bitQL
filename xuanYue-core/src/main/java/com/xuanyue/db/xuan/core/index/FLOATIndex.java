@@ -25,7 +25,7 @@ import com.xuanyue.db.xuan.core.tools.Savor;
  * @date 2020年6月23日
  * @version 0.1
  */
-public class FLOATIndex implements IColumn<Float>{
+public class FLOATIndex implements IColumn{
 
 	private NumberIndex data;
 	private int eNum=10000;

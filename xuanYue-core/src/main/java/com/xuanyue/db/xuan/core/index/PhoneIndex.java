@@ -29,7 +29,7 @@ import com.xuanyue.db.xuan.core.table.sort.SortElement;
  * @date 2020年6月23日
  * @version 0.1
  */
-public class PhoneIndex implements IColumn<String>{
+public class PhoneIndex implements IColumn{
 
 	private HashMap<Integer,IBitIndex> positionV2bit = new HashMap<>();
 	private IBitIndex mask = new BitIndex();

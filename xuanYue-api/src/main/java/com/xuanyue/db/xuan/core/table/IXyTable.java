@@ -27,13 +27,13 @@ public interface IXyTable extends IPersistence{
 	 * 列信息
 	 * @return
 	 */
-	public Map<String,IColumn<?>> getName2column();
+	public Map<String,IColumn> getName2column();
 	/**
 	 * 添加一列
 	 * @param name
 	 * @param column
 	 */
-	public void addColumn(String name,IColumn<?> column);
+	public void addColumn(String name,IColumn column);
 	/**
 	 * 申请资源
 	 * 简单银行家算法：

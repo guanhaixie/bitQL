@@ -22,7 +22,7 @@ import com.xuanyue.db.xuan.core.table.ISortElement;
  * @date 2020年6月23日
  * @version 0.1
  */
-public class DateIndex implements IColumn<Date>{
+public class DateIndex implements IColumn{
 	
 	private NumberIndex data = new NumberIndex(35);
 	public DateIndex() {
