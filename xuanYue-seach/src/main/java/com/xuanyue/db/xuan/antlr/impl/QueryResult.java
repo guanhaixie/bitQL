@@ -16,6 +16,14 @@ public class QueryResult {
 	private byte[] types;//列数据类型
 	private List<String> fl;//列名称
 	private List<Map<Integer,Object>> result;// key:列名称的在fl中的索引
+	private long runTimeLong;
+	
+	public long getRunTimeLong() {
+		return runTimeLong;
+	}
+	public void setRunTimeLong(long runTimeLong) {
+		this.runTimeLong = runTimeLong;
+	}
 	public int getCount() {
 		return count;
 	}

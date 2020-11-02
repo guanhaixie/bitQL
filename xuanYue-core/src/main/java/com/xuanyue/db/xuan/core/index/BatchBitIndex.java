@@ -15,7 +15,7 @@ import com.xuanyue.db.xuan.core.tools.Savor;
  *
  */
 public class BatchBitIndex extends BitIndex {
-
+	private static final long serialVersionUID = 1L;
 	private int split =0;
 	private XGHBitSet splitSet = new XGHBitSet();
 	private byte[] cache = new byte[XGHBitSet.size()];

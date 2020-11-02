@@ -3,10 +3,16 @@ package com.xuanyue.db.xuan;
 
  
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import com.alibaba.fastjson.JSONObject;
 import com.xuanyue.db.xuan.antlr.impl.QueryRequest;
@@ -21,9 +27,13 @@ import com.xuanyue.db.xuan.core.index.FLOATIndex;
 import com.xuanyue.db.xuan.core.index.PhoneIndex;
 import com.xuanyue.db.xuan.core.index.UNumberIndex;
 import com.xuanyue.db.xuan.core.table.IXyTable;
+import com.xuanyue.db.xuan.core.task.X2yThreadPoolExecutor;
 
 
 public class Main {
+	
+	static X2yThreadPoolExecutor exe = null;//new X2yThreadPoolExecutor(10, 10, 10, TimeUnit.SECONDS, 1000);
+	static ArrayBlockingQueue<Long> timeQ = null;//new ArrayBlockingQueue<Runnable>(1000);
 	static void init(Scanner sc) throws Exception{
 		DBMeta dbMeta = new DBMeta();
 		dbMeta.setName("xiegh");
@@ -117,7 +127,7 @@ public class Main {
 			QueryResult x = null;
 			System.out.println();
 			System.out.println(new Date());
-			long now = System.currentTimeMillis();
+			
 			int times = 0;
 			b:while(true) {
 				System.out.print("xiegh [times int]>");
@@ -128,9 +138,54 @@ public class Main {
 					e1.printStackTrace();
 				}
 			}
-			for(int i=0;i<times;i++) {
-				x = SeachContext.query(re);
+			
+			int parallel = 0;
+			c:while(true) {
+				System.out.print("xiegh [parallel]>");
+				try {
+					parallel = Integer.parseInt( sc.nextLine() );
+					break c;
+				} catch (NumberFormatException e1) {
+					e1.printStackTrace();
+				}
 			}
+			//x = SeachContext.query(re);
+			timeQ = new ArrayBlockingQueue<Long>(1000);
+			exe = new X2yThreadPoolExecutor(parallel, parallel, 10, TimeUnit.SECONDS, 1000);
+			List<Future<QueryResult>> rL = new ArrayList<>();
+			long now = System.currentTimeMillis();
+			for(int i=0;i<times;i++) {
+				
+				Future<QueryResult> tr = exe.submit(new Callable<QueryResult>(){
+
+					@Override
+					public QueryResult call() throws Exception {
+						long s = System.currentTimeMillis();
+						QueryResult xx = SeachContext.query(re);
+						xx.setRunTimeLong(System.currentTimeMillis()-s);
+						return xx;
+					}
+					
+				});
+				rL.add(tr);
+			}
+			long max = 0;
+			long min = 100000000;
+			long total = 0;
+			for(Future<QueryResult> e:rL) {
+				x = e.get();
+				if(max<x.getRunTimeLong()) {
+					max=x.getRunTimeLong();
+				}
+				if(min>x.getRunTimeLong()) {
+					min = x.getRunTimeLong();
+				}
+				total+=x.getRunTimeLong();
+			}
+			
+			System.out.println("最长执行时间："+max);
+			System.out.println("最短执行时间："+min);
+			System.out.println("平均执行时间："+(total/times));
 			System.out.println(x.getFl());
 			x.getResult().forEach( e->{
 				System.out.println(e);
@@ -138,7 +193,10 @@ public class Main {
 			System.out.println(x.getCount());
 			long xd = System.currentTimeMillis()-now;
 			System.out.println(xd/times);
+			System.out.println("总耗时："+ xd);
 			System.out.println(new Date());
+			
+			exe.shutdown();
 		}
 		
 	}

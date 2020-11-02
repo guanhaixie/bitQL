@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.xuanyue.db.xuan.core.exception.BankerException;
-import com.xuanyue.db.xuan.core.index.BitIndex;
 import com.xuanyue.db.xuan.core.table.IBitIndex;
 import com.xuanyue.db.xuan.core.table.ISortElement;
 

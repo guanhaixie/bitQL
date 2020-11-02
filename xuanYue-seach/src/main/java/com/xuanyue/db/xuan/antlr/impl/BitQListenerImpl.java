@@ -43,6 +43,7 @@ import com.xuanyue.db.xuan.core.table.ISortElement;
 import com.xuanyue.db.xuan.core.table.IStringEncoding;
 import com.xuanyue.db.xuan.core.table.IXyTable;
 import com.xuanyue.db.xuan.core.table.sort.LimitHandler;
+import com.xuanyue.db.xuan.core.task.X2yThreadPoolExecutor;
 /**
  * 面向排序和分页的sql解析。
  * 一次查询，返回 记录总数，和结果结果集
@@ -61,6 +62,12 @@ public class BitQListenerImpl extends BitQBaseListener{
 	private int count;//记录数
 	private byte[] types;//列数据类型
 	private Map<Integer,Object> parameters;//传入参数
+	private boolean accelerate;
+	
+	
+	public void isAccelerate(boolean accelerate) {
+		this.accelerate = accelerate;
+	}
 	
 	public BitQListenerImpl(int maxSource) {
 		this.maxSouce = maxSource;
@@ -124,8 +131,14 @@ public class BitQListenerImpl extends BitQBaseListener{
 		//where
 		OrConditionContext or= ctx.orCondition();
 		List<IBitIndex> caches = null;// 第0个IBitIndex是 过滤结果后
+		
+		X2yThreadPoolExecutor accelerater = null;
 		try {
 			caches = table.apply(maxSouce);
+			if(accelerate) {//多线程加速
+				accelerater = SeachContext.getAccelerate();
+				caches = SeachContext.toAccelerateEncapsulation(caches,accelerater);
+			}
 			if(or!=null) {
 				//执行where过滤
 				handleOr(or,caches,0);
@@ -313,7 +326,17 @@ public class BitQListenerImpl extends BitQBaseListener{
 			throw new IndexException(e);
 		}finally {
 			if(caches!=null) {
-				table.returnSource(caches);
+				if(accelerate) {
+					try {
+						SeachContext.returnAccelerate(accelerater);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					table.returnSource(SeachContext.unpacke(caches));
+				}else {
+					table.returnSource(caches);
+				}
+				
 			}
 		}
 		

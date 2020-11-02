@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.xuanyue.db.xuan.core.exception.IndexException;
 import com.xuanyue.db.xuan.core.table.IBitIndex;
@@ -20,7 +18,7 @@ import com.xuanyue.db.xuan.core.table.sort.SortElement;
  * @version 0.1
  */
 public class BooleanIndex implements  IColumn{
-	private static Logger log= LoggerFactory.getLogger(BooleanIndex.class);
+//	private static Logger log= LoggerFactory.getLogger(BooleanIndex.class);
 	private IBitIndex data = new BitIndex();
 	private IBitIndex mask = new BitIndex();
 	

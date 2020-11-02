@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 
-import com.xuanyue.db.xuan.core.table.Source;
-
 /**
  * 计数函数
  * @author guanh
@@ -45,7 +43,7 @@ public class Countor implements ICountor{
 	}
 	@Override
 	public void flush(int index) {
-		int split = getSplit(index);
+//		int split = getSplit(index);
 		//splits = MetaTable.managerShort.apply(split+1); 
 		splits.forEach(e->{
 			short[] d = e.getData();

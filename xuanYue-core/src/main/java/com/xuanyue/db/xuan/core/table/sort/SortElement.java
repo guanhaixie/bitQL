@@ -1,6 +1,5 @@
 package com.xuanyue.db.xuan.core.table.sort;
 
-import com.xuanyue.db.xuan.core.index.BitIndex;
 import com.xuanyue.db.xuan.core.table.IBitIndex;
 import com.xuanyue.db.xuan.core.table.ISortElement;
 

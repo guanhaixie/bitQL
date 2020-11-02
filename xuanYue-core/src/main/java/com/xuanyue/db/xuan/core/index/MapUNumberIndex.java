@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import com.xuanyue.db.xuan.core.table.IBitIndex;
 import com.xuanyue.db.xuan.core.table.IColumn;
 import com.xuanyue.db.xuan.core.table.ISortElement;
-import com.xuanyue.db.xuan.core.table.sort.SortElement;
 import com.xuanyue.db.xuan.core.tools.Savor;
 /**
  * 类似 MapbooleanIndex ，只是数据标出了无符号数值。

@@ -28,7 +28,7 @@ public class BitIndex implements IBitIndex{
 	private static final long serialVersionUID = 1L;
 	
 	private AtomicLong version = new AtomicLong();
-	private Map<Integer,IXGHBitSet> splits = new HashMap<>();
+	protected Map<Integer,IXGHBitSet> splits = new HashMap<>();
 	protected int maxId;
 	public Map<Integer,IXGHBitSet> getSplits(){
 		return splits;
