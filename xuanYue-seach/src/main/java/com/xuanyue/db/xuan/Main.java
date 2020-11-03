@@ -149,6 +149,7 @@ public class Main {
 					e1.printStackTrace();
 				}
 			}
+			
 			//x = SeachContext.query(re);
 			timeQ = new ArrayBlockingQueue<Long>(1000);
 			exe = new X2yThreadPoolExecutor(parallel, parallel, 10, TimeUnit.SECONDS, 1000);
@@ -161,7 +162,7 @@ public class Main {
 					@Override
 					public QueryResult call() throws Exception {
 						long s = System.currentTimeMillis();
-						QueryResult xx = SeachContext.query(re);
+						QueryResult xx = SeachContext.query(re,true);
 						xx.setRunTimeLong(System.currentTimeMillis()-s);
 						return xx;
 					}

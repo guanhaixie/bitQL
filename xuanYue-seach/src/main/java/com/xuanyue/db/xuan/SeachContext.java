@@ -68,13 +68,13 @@ public class SeachContext {
 		return tree;
 	}
 	
-	public static QueryResult query(QueryRequest req) {
+	public static QueryResult query(QueryRequest req,boolean accelerate) {
 		ParseTree tree = get(req.getSql());
 		ParseTreeWalker walker = new ParseTreeWalker();
 		BitMaxSourceListenerImpl evalByListener = new BitMaxSourceListenerImpl();
 		walker.walk(evalByListener, tree);
 		BitQListenerImpl l2 = new BitQListenerImpl(evalByListener.getMaxSource());
-		l2.isAccelerate(true);
+		l2.isAccelerate(accelerate);
 		walker.walk(l2, tree);
 		
 		QueryResult r = new QueryResult();
