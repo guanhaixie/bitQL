@@ -115,7 +115,12 @@ public class BitQListenerImpl extends BitQBaseListener{
 			table = SeachContext.getTable(tn);
 			types = new byte[fl.size()];
 			for(int i=0;i<fl.size();i++) {
-				types[i]=table.getType(fl.get(i));
+				if("rowid".equals(fl.get(i) )) {
+					types[i]=0;
+				}else {
+					types[i]=table.getType(fl.get(i));
+				}
+				
 			}
 		} catch (Exception e1) {
 			throw new IndexException("ERROR at table "+tn+" exist?",e1);
@@ -316,7 +321,11 @@ public class BitQListenerImpl extends BitQBaseListener{
 					rx = new HashMap<>();
 					tmp = table.read(j);
 					for(int i=0;i<fl.size();i++) {
-						rx.put(i,tmp.get(fl.get(i)));
+						if("rowid".equals( fl.get(i))) {
+							rx.put(i,j);
+						}else {
+							rx.put(i,tmp.get(fl.get(i)));
+						}
 					}
 					r.add(rx);
 				}
