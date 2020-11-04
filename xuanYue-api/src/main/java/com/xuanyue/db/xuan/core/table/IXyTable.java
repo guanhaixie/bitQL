@@ -65,6 +65,19 @@ public interface IXyTable extends IPersistence{
 	 */
 	public int insertInto(Map<String,Object> vs);
 	/**
+	 * 修改
+	 * @param vs
+	 * @return
+	 */
+	public int updateByRowid(Map<String,Object> vs,int rowid);
+	
+	/**
+	 * 删除
+	 * @param rowid
+	 * @return
+	 */
+	public int deleteByRowid(int rowid);
+	/**
 	 * 刷新rowId
 	 * @param rowId
 	 */

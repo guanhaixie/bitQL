@@ -117,6 +117,48 @@ public class XyTable implements IXyTable{
 		return rowId;
 	}
 	@Override
+	public int updateByRowid(Map<String,Object> vs,int rowId) {
+		if(vs==null) {
+			throw new IndexException("insertInto value is null");
+		}
+		ReadWriteLock rwl = this.getReadWriteLock(rowId);
+		Lock lock = rwl.writeLock();
+		try {
+			lock.lock();
+			name2column.forEach( (k,v)->{
+				if(vs.containsKey(k)) {
+					v.set(rowId, vs.get(k));
+					v.flush(rowId);
+				}
+			});
+			mask.set(rowId);
+			mask.flush(rowId);
+			return 1;
+		} finally {
+			lock.unlock();
+		}
+	}
+	@Override
+	public int deleteByRowid(int rowid) {
+		if(mask.get(rowid)) {
+			ReadWriteLock rwl = this.getReadWriteLock(rowid);
+			Lock lock = rwl.writeLock();
+			try {
+				lock.lock();
+				mask.set(rowid,false);
+				mask.flush(rowid);
+				return 1;
+			} finally {
+				lock.unlock();
+			}
+		}else {
+			return 0;
+		}
+		
+	}
+	
+	
+	@Override
 	public void flush(int rowId) {
 		name2column.forEach( (k,v)->{
 			v.flush(rowId);
