@@ -10,6 +10,7 @@ import com.xuanyue.db.xuan.core.exception.IndexException;
 import com.xuanyue.db.xuan.core.table.IBitIndex;
 import com.xuanyue.db.xuan.core.table.IColumn;
 import com.xuanyue.db.xuan.core.table.ISortElement;
+import com.xuanyue.db.xuan.msg.VLAUETYPE;
 /**
  * 最小精度为秒
  * 用制定的长度存放。
@@ -156,11 +157,15 @@ public class DateIndex implements IColumn{
 		return data.getSortE(isDesc, names);
 	}
 	@Override
-	public byte getType() {
-		return 3;
+	public VLAUETYPE getType() {
+		return VLAUETYPE.DATE;
 	}
 	@Override
 	public void saveRow(String path, int rowId) throws Exception {
 		data.saveRow(String.format("%s/data", path), rowId);
+	}
+	@Override
+	public boolean checkSortE(boolean isDesc,String names) {
+		return true&&names==null;
 	}
 }

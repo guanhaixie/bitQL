@@ -2,9 +2,41 @@ grammar BitQ;
 @header {
 	package com.xuanyue.db.xuan.antlr;
 }
+
+@lexer::members{
+	
+	private int parallel = 1;
+	
+	java.util.regex.Pattern parallelReg = java.util.regex.Pattern.compile("parallel\\s*?\\(\\s*?(\\d+?)\\s*?\\)");
+	java.util.regex.Pattern p = java.util.regex.Pattern.compile("/\\*(.*?)\\*/");
+	public int getParallel(){
+		return this.parallel;
+	}
+	void showme(){
+		
+		java.util.regex.Matcher m = p.matcher(this.getText());
+		
+		if(m.find()){
+			
+			java.util.regex.Matcher m2 = parallelReg.matcher(m.group(1));
+			if(m2.find()) {
+				parallel = Integer.parseInt(m2.group(1));
+				if(parallel<1){
+					parallel=1;
+				}else if(parallel>20){
+					parallel =20;
+				}
+			}
+		}
+		
+		skip();
+	}
+}
+
 query : expr;
+
 //expr : SELECT result FROM repo (WHERE orCondition  groupBy? sortBy? mix? limit? SEMI)?;
-expr : SELECT result FROM repo (WHERE orCondition)? sortBy? mix? limit? saveAsFile?  SEMI?;
+expr :  SELECT result FROM repo (WHERE orCondition)? sortBy? mix? limit? saveAsFile?  SEMI?;
 //groupBy:Group By fullName (Having function op=('=' | '!='|'>='|'>'|'<='|'<')  NUM)?;
 //function: op=(Sum|Max|Min|Count|Avg) '(' (fullName|NUM)  ')';
 repo: fullName (',' fullName)*;
@@ -25,7 +57,7 @@ result:fullName(','fullName)*;
 fullName:NAME ('.'NAME)*;
 boolTF: TRUE|FALSE;
 
-TransArrt:'?'('0' .. '9')+;
+TransArrt:'?'[a-zA-Z_0-9]+;
 
 orNot:OR NOT?;
 andNot:AND NOT?;
@@ -82,4 +114,7 @@ STRING : '\'' ( ~('\''|'\\') | ('\\' .) )* '\''
 NUM: '0'..'9'+(DOT '0'..'9'+ )?('l'|'f')?;
 TRUE:[Tt][Rr][Uu][Ee];
 FALSE:[Ff][Aa][Ll][Ss][Ee];
+
+
 WS : [ \t\n\r]+ -> skip ;
+SQL_COMMENT : '/*' .*? '*/' { showme(); };

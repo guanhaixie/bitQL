@@ -2,6 +2,8 @@ package com.xuanyue.db.xuan.core.db;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 /**
  * 库信息
  * @author 解观海
@@ -9,6 +11,7 @@ import java.util.Map;
  * @date 2020年6月23日
  *
  */
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class DBMeta {
 
 	private String name;

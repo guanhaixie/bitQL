@@ -13,6 +13,7 @@ import com.xuanyue.db.xuan.core.table.IBitIndex;
 import com.xuanyue.db.xuan.core.table.IColumn;
 import com.xuanyue.db.xuan.core.table.ISortElement;
 import com.xuanyue.db.xuan.core.table.sort.SortElement;
+import com.xuanyue.db.xuan.msg.VLAUETYPE;
 /**
  * 无符号整形
  * @author 解观海
@@ -284,8 +285,12 @@ public class UNumberIndex implements IColumn{
 		return r;
 	}
 	@Override
-	public byte getType() {
-		return 2;
+	public boolean checkSortE(boolean isDesc,String names) {
+		return true&&names==null;
+	}
+	@Override
+	public VLAUETYPE getType() {
+		return VLAUETYPE.LONG;
 	}
 	@Override
 	public void saveRow(String path, int rowId) throws Exception {

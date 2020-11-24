@@ -11,6 +11,7 @@ import com.xuanyue.db.xuan.core.table.IBitIndex;
 import com.xuanyue.db.xuan.core.table.IColumn;
 import com.xuanyue.db.xuan.core.table.ISortElement;
 import com.xuanyue.db.xuan.core.table.sort.SortElement;
+import com.xuanyue.db.xuan.msg.VLAUETYPE;
 /**
  * 手机号
  * 
@@ -370,8 +371,12 @@ public class PhoneIndex implements IColumn{
 		return r;
 	}
 	@Override
-	public byte getType() {
-		return 8;
+	public boolean checkSortE(boolean isDesc,String names) {
+		return true&&names==null;
+	}
+	@Override
+	public VLAUETYPE getType() {
+		return VLAUETYPE.STRING;
 	}
 	@Override
 	public void saveRow(String path, int rowId) throws Exception {

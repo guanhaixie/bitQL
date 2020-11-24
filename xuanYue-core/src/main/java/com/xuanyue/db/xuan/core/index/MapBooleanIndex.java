@@ -13,6 +13,7 @@ import com.xuanyue.db.xuan.core.table.IColumn;
 import com.xuanyue.db.xuan.core.table.ISortElement;
 import com.xuanyue.db.xuan.core.table.sort.SortElement;
 import com.xuanyue.db.xuan.core.tools.Savor;
+import com.xuanyue.db.xuan.msg.VLAUETYPE;
 /**
  * bit向量索引的映射。
  * 要求map的key是小数量的，一个key就对应一个bit向量。
@@ -207,8 +208,12 @@ public class MapBooleanIndex implements IColumn{
 		return el;
 	}
 	@Override
-	public byte getType() {
-		return 5;
+	public boolean checkSortE(boolean isDesc,String names) {
+		return true&&name2BitIndex.containsKey(names);
+	}
+	@Override
+	public VLAUETYPE getType() {
+		return VLAUETYPE.MAPBOOLEAN;
 	}
 	@Override
 	public void saveRow(String path, int rowId) throws Exception {

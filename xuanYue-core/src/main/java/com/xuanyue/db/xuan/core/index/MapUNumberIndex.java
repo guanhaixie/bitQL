@@ -11,6 +11,7 @@ import com.xuanyue.db.xuan.core.table.IBitIndex;
 import com.xuanyue.db.xuan.core.table.IColumn;
 import com.xuanyue.db.xuan.core.table.ISortElement;
 import com.xuanyue.db.xuan.core.tools.Savor;
+import com.xuanyue.db.xuan.msg.VLAUETYPE;
 /**
  * 类似 MapbooleanIndex ，只是数据标出了无符号数值。
  * @author 解观海
@@ -107,15 +108,42 @@ public class MapUNumberIndex implements IColumn{
 
 	@Override
 	public void set(int rowId, Object value) {
+		@SuppressWarnings("unchecked")
+		Map<String,Long> c = (Map<String,Long>)value;
+		
+		name2BitIndex.forEach( (k,v)->{
+			if(c.containsKey(k)) {
+				v.set(rowId, c.get(k));
+			}else {
+				v.set(rowId, null);
+			}
+		});
+		mask.set(rowId);
 	}
 
 	@Override
 	public Map<String, Long> get(int rowId) {
+		
+		if(mask.get(rowId)) {
+			Map<String, Long> r = new HashMap<>();
+			name2BitIndex.forEach( (k,v)->{
+				r.put(k, v.get(rowId));
+			});
+			return r;
+		}
 		return null;
+		
 	}
 
 	@Override
 	public void expr(String method, Object value, List<IBitIndex> caches) {
+		@SuppressWarnings("unchecked")
+		Map<String,Object> c = (Map<String,Object>)value;
+		
+		String key = c.get("key").toString();
+		Object valueO = c.get("value");
+		UNumberIndex sub = name2BitIndex.get(key);
+		sub.expr(method, valueO, caches);
 		
 	}
 	@Override
@@ -133,8 +161,12 @@ public class MapUNumberIndex implements IColumn{
 		return el;
 	}
 	@Override
-	public byte getType() {
-		return 6;
+	public boolean checkSortE(boolean isDesc,String names) {
+		return true&&name2BitIndex.containsKey(names);
+	}
+	@Override
+	public VLAUETYPE getType() {
+		return VLAUETYPE.MAPNUM;
 	}
 	@Override
 	public void saveRow(String path, int rowId) throws Exception {

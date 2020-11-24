@@ -135,7 +135,7 @@ public class Main {
 				}
 			}
 			for(int i=0;i<times;i++) {
-				x = SeachContext.query(re,true);
+				//x = SeachContext.query(re,true);
 			}
 			System.out.println(x.getFl());
 			x.getResult().forEach( e->{

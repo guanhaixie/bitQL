@@ -1,5 +1,7 @@
 package com.xuanyue.db.xuan.core.index;
 
+import com.xuanyue.db.xuan.msg.VLAUETYPE;
+
 /**
  * 
  * @author 解观海
@@ -9,7 +11,7 @@ package com.xuanyue.db.xuan.core.index;
  */
 public class LongIndex extends NumberIndex{
 	@Override
-	public byte getType() {
-		return 2;
+	public VLAUETYPE getType() {
+		return VLAUETYPE.LONG;
 	}
 }

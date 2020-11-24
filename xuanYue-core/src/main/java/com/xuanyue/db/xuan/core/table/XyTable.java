@@ -19,6 +19,7 @@ import com.xuanyue.db.xuan.core.index.BatchBitIndex;
 import com.xuanyue.db.xuan.core.index.BitIndex;
 import com.xuanyue.db.xuan.core.tools.SafeManager;
 import com.xuanyue.db.xuan.core.tools.Savor;
+import com.xuanyue.db.xuan.msg.VLAUETYPE;
 
 /**
  * 主表数据
@@ -243,7 +244,7 @@ public class XyTable implements IXyTable{
 		init_lock.createNewFile();
 	}
 	@Override
-	public byte getType(String fn) {
+	public VLAUETYPE getType(String fn) {
 		IColumn column = name2column.get(fn.toLowerCase());
 		return column.getType();
 	}
@@ -261,6 +262,15 @@ public class XyTable implements IXyTable{
 		mask.setAll(true);
 		System.out.println(mask.cardinality());
 		mask.save(String.format("%s/mask","c:/port/xuanYue"));
+	}
+	@Override
+	public IColumn getColumn(String cname) {
+		return cname==null?null:name2column.get(cname.toLowerCase());
+	}
+	@Override
+	public int checkExpr(String fieldName, String op, Object v) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 	

@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.antlr.v4.runtime.CharStreams;
@@ -13,18 +15,28 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
+import com.alibaba.fastjson.JSONObject;
+import com.xuanyue.db.xuan.antlr.BitQBaseListener;
 import com.xuanyue.db.xuan.antlr.BitQLexer;
 import com.xuanyue.db.xuan.antlr.BitQParser;
 import com.xuanyue.db.xuan.antlr.impl.BitMaxSourceListenerImpl;
 import com.xuanyue.db.xuan.antlr.impl.BitQListenerImpl;
-import com.xuanyue.db.xuan.antlr.impl.QueryRequest;
-import com.xuanyue.db.xuan.antlr.impl.QueryResult;
+import com.xuanyue.db.xuan.antlr.impl.ParseTreeE;
+import com.xuanyue.db.xuan.core.db.DBMeta;
 import com.xuanyue.db.xuan.core.db.IXyDB;
-import com.xuanyue.db.xuan.core.exception.IndexException;
+import com.xuanyue.db.xuan.core.db.TableMeta;
+import com.xuanyue.db.xuan.core.db.XyDB;
 import com.xuanyue.db.xuan.core.index.AcceleraterBitIndex;
+import com.xuanyue.db.xuan.core.index.BooleanIndex;
+import com.xuanyue.db.xuan.core.index.DateIndex;
+import com.xuanyue.db.xuan.core.index.FLOATIndex;
+import com.xuanyue.db.xuan.core.index.PhoneIndex;
+import com.xuanyue.db.xuan.core.index.UNumberIndex;
 import com.xuanyue.db.xuan.core.table.IBitIndex;
 import com.xuanyue.db.xuan.core.table.IXyTable;
-import com.xuanyue.db.xuan.core.task.X2yThreadPoolExecutor;
+import com.xuanyue.db.xuan.core.task.Accelerater;
+import com.xuanyue.db.xuan.core.task.X2YEXTThreadPoolExecutor;
+import com.xuanyue.db.xuan.core.task.X2YEXTThreadPoolExecutor.NothingRejectedExecutionHandler;
 import com.xuanyue.db.xuan.core.tools.LruCache;
 
 /**
@@ -37,17 +49,20 @@ import com.xuanyue.db.xuan.core.tools.LruCache;
 public class SeachContext {
 
 	private static IXyDB db;
-	private static ArrayBlockingQueue<X2yThreadPoolExecutor> queryQ = new ArrayBlockingQueue<X2yThreadPoolExecutor>(10);
 	
-	private static Map<String,ParseTree> treeCache = Collections.synchronizedMap(new LruCache<String,ParseTree>(100));
+	private static X2YEXTThreadPoolExecutor exe;
+	//private static ArrayBlockingQueue<X2yThreadPoolExecutor> queryQ = new ArrayBlockingQueue<X2yThreadPoolExecutor>(10);
+	ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+	
+	private static Map<String,ParseTreeE> treeCache = Collections.synchronizedMap(new LruCache<String,ParseTreeE>(100));
 	private static String treeLock = "treeLock";
 	
 	static {
-		queryQ.add(new X2yThreadPoolExecutor(5, 16, 20, TimeUnit.SECONDS, 30 ));
+		exe = new X2YEXTThreadPoolExecutor(40, 80, 20, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10),new NothingRejectedExecutionHandler());
 	}
 	
-	private static ParseTree get(String sql) {
-		ParseTree tree = treeCache.get(sql);
+	private static ParseTreeE get(String sql) {
+		ParseTreeE tree = treeCache.get(sql);
 		if(tree == null) {
 			synchronized (treeLock) {
 				tree = treeCache.get(sql);
@@ -55,12 +70,18 @@ public class SeachContext {
 					CodePointCharStream cpcs = CharStreams.fromString( sql );
 			        //用 cpcs 构造词法分析器 lexer，词法分析的作用是产生记号
 			        BitQLexer lexer = new BitQLexer(cpcs);
+			        
+			        
+			       // CommonTokenStream tokens = new CommonTokenStream(lexer,"comment");
+			        
 			        //用词法分析器 lexer 构造一个记号流 tokens
 			        CommonTokenStream tokens = new CommonTokenStream(lexer);
 			        //再使用 tokens 构造语法分析器 parser,至此已经完成词法分析和语法分析的准备工作
 			        BitQParser parser = new BitQParser(tokens);
 			        //最终调用语法分析器的规则 prog，完成对表达式的验证
-			        tree = parser.query();
+			        tree = new ParseTreeE();
+			        tree.setTree(parser.query());
+			        tree.setParallel(lexer.getParallel());
 			        treeCache.put(sql, tree);
 				}
 			}
@@ -68,24 +89,25 @@ public class SeachContext {
 		return tree;
 	}
 	
-	public static QueryResult query(QueryRequest req,boolean accelerate) {
-		ParseTree tree = get(req.getSql());
+	public static IResult query(String sql) {
+		ParseTreeE tree = get(sql);
 		ParseTreeWalker walker = new ParseTreeWalker();
 		BitMaxSourceListenerImpl evalByListener = new BitMaxSourceListenerImpl();
-		walker.walk(evalByListener, tree);
+		walker.walk(evalByListener, tree.getTree());
 		BitQListenerImpl l2 = new BitQListenerImpl(evalByListener.getMaxSource());
-		l2.isAccelerate(accelerate);
-		walker.walk(l2, tree);
-		
-		QueryResult r = new QueryResult();
-		
-		r.setCount(l2.getCount());
-		r.setFl( l2.getFieldNames() );
-		r.setTypes( l2.getTypes() );
-		r.setResult( l2.getData() );
+		l2.setParallel(tree.getParallel());
 		
 		
-		return r;
+//		l2.isAccelerate(accelerate);
+		walker.walk(l2, tree.getTree());
+//		QueryResult r = new QueryResult();
+//		
+//		r.setCount(l2.getCount());
+//		r.setFl( l2.getFieldNames() );
+//		r.setTypes( l2.getTypes() );
+//		r.setResult( l2.getData() );
+		
+		return l2;
 		
 	}
 	
@@ -95,16 +117,12 @@ public class SeachContext {
 	public static IXyTable getTable(String name) {
 		return db.getTable(name);
 	}
-	public static X2yThreadPoolExecutor getAccelerate() throws InterruptedException {
-		return queryQ.take();
+	public static Accelerater getAccelerate() throws InterruptedException {
+		return new Accelerater(exe);
 	}
-	public static void returnAccelerate(X2yThreadPoolExecutor acc) throws InterruptedException {
-		queryQ.put(acc);
-	}
-	public static List<IBitIndex> toAccelerateEncapsulation(List<IBitIndex> workers,X2yThreadPoolExecutor accelerate){
+	public static List<IBitIndex> toAccelerateEncapsulation(List<IBitIndex> workers,Accelerater accelerate){
 		List<IBitIndex> r = new ArrayList<>();
 		for(IBitIndex worker:workers) {
-//			System.out.println("accelerate num:"+accelerate.getActiveCount());
 			r.add( new AcceleraterBitIndex(accelerate, worker) );
 		}
 		return r;
@@ -116,4 +134,79 @@ public class SeachContext {
 		}
 		return r;
 	}
+
+	
+	public static void initer() throws Exception {
+		DBMeta dbMeta = new DBMeta();
+		dbMeta.setName("xiegh");
+		
+		dbMeta.setDataPath("e:/data");
+		
+		TableMeta phs = new TableMeta();
+		phs.setName("t_ph");
+		phs.setSource(80);
+		dbMeta.add("t_ph", phs);
+		
+		phs.addColumn(PhoneIndex.class, "phone"  );
+		phs.addColumn(UNumberIndex.class, "operator" ,2 );
+		phs.addColumn(FLOATIndex.class, "price" ,24,100,0 );
+		phs.addColumn(BooleanIndex.class, "ismy"  );
+		phs.addColumn(UNumberIndex.class, "city" ,14 );
+		phs.addColumn(DateIndex.class, "create_time" );//35
+		
+		JSONObject json = (JSONObject)JSONObject.toJSON(dbMeta);
+		System.out.println(json.toJSONString());
+		dbMeta = JSONObject.parseObject(json.toJSONString(), DBMeta.class);
+		IXyDB db = new XyDB();
+		db.init(dbMeta);
+		db.load();
+		
+		SeachContext.initDB(db);
+	}
+	
+	
+	
+	
+	public static void main(String[] args) {
+		
+		//String sql = " phone,price,create_time from T_PH where   Phone_seach(phone,Contains,'999') price>2000f and ismy=true and city>3 order by price  limit 12000000,10";
+		String sql = "/*parallel(11)*/selet ax from tx ";
+		CodePointCharStream cpcs = CharStreams.fromString( sql);
+        //用 cpcs 构造词法分析器 lexer，词法分析的作用是产生记号
+        BitQLexer lexer = new BitQLexer(cpcs);
+        
+       // CommonTokenStream tokens = new CommonTokenStream(lexer,"comment");
+        
+        //用词法分析器 lexer 构造一个记号流 tokens
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        		//Token.HIDDEN_CHANNEL);
+        //再使用 tokens 构造语法分析器 parser,至此已经完成词法分析和语法分析的准备工作
+        
+//        List<Token> ts = tokens.getTokens();
+//        
+//        for(Token t:ts) {
+//        	System.out.println(t.getText());
+//        }
+        
+        BitQParser parser = new BitQParser(tokens);
+        //最终调用语法分析器的规则 prog，完成对表达式的验证
+        
+       
+        ParseTree tree = parser.query();
+        
+        ParseTreeWalker walker = new ParseTreeWalker();
+		BitMaxSourceListenerImpl evalByListener = new BitMaxSourceListenerImpl();
+		walker.walk(evalByListener, tree);
+        
+        
+        System.out.println(tree.toString());
+        System.out.println(lexer.getParallel());
+        
+	}
+	
+	
+	
+}
+class LLL extends BitQBaseListener{
+	
 }

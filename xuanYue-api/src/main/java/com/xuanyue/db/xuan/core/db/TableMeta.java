@@ -2,6 +2,9 @@ package com.xuanyue.db.xuan.core.db;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * 表信息
  * @author 解观海
@@ -9,6 +12,7 @@ import java.util.Map;
  * @date 2020年6月23日
  *
  */
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class TableMeta {
 
 	private Map<String,ColumnMeta> columns = new HashMap<>();
@@ -18,7 +22,7 @@ public class TableMeta {
 	
 	public void addColumn(Class<?> cla,String name,int ... ps) throws Exception{
 		ColumnMeta cm = new ColumnMeta();
-		cm.setClassName(cla.getName());
+		cm.setClassName(cla.getSimpleName());
 		cm.setName(name);
 		cm.setParameters(ps);
 		columns.put(name, cm);

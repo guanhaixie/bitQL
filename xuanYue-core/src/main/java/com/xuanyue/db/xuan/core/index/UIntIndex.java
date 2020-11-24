@@ -6,6 +6,7 @@ import java.util.List;
 import com.xuanyue.db.xuan.core.table.IBitIndex;
 import com.xuanyue.db.xuan.core.table.IColumn;
 import com.xuanyue.db.xuan.core.table.ISortElement;
+import com.xuanyue.db.xuan.msg.VLAUETYPE;
 /**
  * 无符号int
  * @author 解观海
@@ -100,10 +101,13 @@ public class UIntIndex implements IColumn{
 	public List<ISortElement> getSortE(boolean isDesc,String ...names) {
 		return data.getSortE(isDesc);
 	}
-
 	@Override
-	public byte getType() {
-		return 0;
+	public boolean checkSortE(boolean isDesc,String names) {
+		return true&&names==null;
+	}
+	@Override
+	public VLAUETYPE getType() {
+		return VLAUETYPE.INT;
 	}
 
 	@Override

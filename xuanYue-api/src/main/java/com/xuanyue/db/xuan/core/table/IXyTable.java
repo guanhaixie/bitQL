@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import com.xuanyue.db.xuan.msg.VLAUETYPE;
+
 /**
  * 数据表接口
  * @author 解观海
@@ -28,6 +30,12 @@ public interface IXyTable extends IPersistence{
 	 * @return
 	 */
 	public Map<String,IColumn> getName2column();
+	/**
+	 * 获得列
+	 * @param cname
+	 * @return
+	 */
+	public IColumn getColumn(String cname);
 	/**
 	 * 添加一列
 	 * @param name
@@ -58,6 +66,16 @@ public interface IXyTable extends IPersistence{
 	 * @param caches 计算时需要的内存缓冲
 	 */
 	public void expr(String fieldName,String op,Object v,List<IBitIndex> caches);
+	/**
+	 * 检查逻辑运算表达式是否有语法错误
+	 * @param fieldName
+	 * @param op
+	 * @param v
+	 * @param caches
+	 * @return
+	 */
+	public int checkExpr(String fieldName,String op,Object v);
+	
 	/**
 	 * 插入
 	 * @param vs
@@ -98,7 +116,7 @@ public interface IXyTable extends IPersistence{
 	 * @param fn
 	 * @return
 	 */
-	public byte getType(String fn);
+	public VLAUETYPE getType(String fn);
 	/**
 	 * bit向量封装为排序单元并返回。
 	 * @param fn

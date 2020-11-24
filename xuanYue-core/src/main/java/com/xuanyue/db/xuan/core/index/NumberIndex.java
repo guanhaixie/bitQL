@@ -11,6 +11,7 @@ import com.xuanyue.db.xuan.core.table.IBitIndex;
 import com.xuanyue.db.xuan.core.table.IColumn;
 import com.xuanyue.db.xuan.core.table.ISortElement;
 import com.xuanyue.db.xuan.core.tools.Savor;
+import com.xuanyue.db.xuan.msg.VLAUETYPE;
 /**
  * 有符号整数。
  * 这里数值的符号不是用符号位来表示的，因为用符号位来表示数值正负，在排序时会非常复杂，所以这里采用   无符号数值  加  偏移量  的方式。
@@ -212,10 +213,13 @@ public class NumberIndex implements IColumn{
 	public List<ISortElement> getSortE(boolean isDesc,String ...names) {
 		return data.getSortE(isDesc);
 	}
-
 	@Override
-	public byte getType() {
-		return 2;
+	public boolean checkSortE(boolean isDesc,String names) {
+		return true&&names==null;
+	}
+	@Override
+	public VLAUETYPE getType() {
+		return VLAUETYPE.LONG;
 	}
 
 	@Override

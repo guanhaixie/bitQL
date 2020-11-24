@@ -2,10 +2,12 @@ package com.xuanyue.db.xuan.antlr.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import com.xuanyue.db.xuan.SeachContext;
 import com.xuanyue.db.xuan.antlr.BitQBaseListener;
 import com.xuanyue.db.xuan.antlr.BitQParser.AndConditionContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.AndNotContext;
@@ -18,9 +20,13 @@ import com.xuanyue.db.xuan.antlr.BitQParser.MixContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.OrConditionContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.OrNotContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.Phone_seachContext;
+import com.xuanyue.db.xuan.antlr.BitQParser.RepoContext;
+import com.xuanyue.db.xuan.antlr.BitQParser.ResultContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.SortByContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.To_dateContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.ValuesContext;
+import com.xuanyue.db.xuan.core.exception.IndexException;
+import com.xuanyue.db.xuan.core.table.IXyTable;
 /**
  * 解析sql,计算使用的最大资源数，用于银行家算法申请资源
  *
@@ -31,11 +37,47 @@ import com.xuanyue.db.xuan.antlr.BitQParser.ValuesContext;
  */
 public class BitMaxSourceListenerImpl extends BitQBaseListener{
 
-	
+	private IXyTable table;//表
+	private List<String> fl = new ArrayList<>();
+	private List<String> errorInfos = new ArrayList<>();
 	private int maxId=0;
 	
 	public int getMaxSource() {
 		return maxId+1;
+	}
+	
+	@Override
+	public void exitResult(ResultContext ctx) {
+		List<FullNameContext> fs = ctx.fullName();
+		fl = new ArrayList<>();
+		if(fs!=null) {
+			FullNameContext f = null;
+			for(int i=0;i<fs.size();i++) {
+				f = fs.get(i);
+				fl.add(f.getText().toLowerCase());
+			}
+		}
+	}
+	
+	@Override
+	public void exitRepo(RepoContext ctx) {
+		List<FullNameContext> fnl = ctx.fullName();
+		if(fnl.size()==0) {
+			throw new IndexException("ERROR at from");
+		}
+		List<TerminalNode> lasts = fnl.get(fnl.size()-1).NAME();
+		String tn = lasts.get(lasts.size()-1).getText().toLowerCase();
+		
+		table = SeachContext.getTable(tn);
+		if(table==null) {
+			errorInfos.add(String.format( "table %s is not exists" , tn));
+		}else {
+			for(int i=0;i<fl.size();i++) {
+				if(!"rowid".equals(fl.get(i) )&& null==table.getColumn( fl.get(i) )) {
+					errorInfos.add(String.format("column  %s is not exists", fl.get(i)));
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -82,7 +124,6 @@ public class BitMaxSourceListenerImpl extends BitQBaseListener{
 	private void handleAnd(AndConditionContext and,int from) {
 		fulshMaxId(from);
 		List<ConditionElementContext> el = and.conditionElement();
-		List<AndNotContext> ans = and.andNot();
 		
 		ConditionElementContext e = el.get(0);
 		GroupConditionContext group = e.groupCondition();
@@ -110,7 +151,6 @@ public class BitMaxSourceListenerImpl extends BitQBaseListener{
 		Phone_seachContext phone = expr.phone_seach();
 		
 		if(phone!=null) {
-			FullNameContext fn = phone.fullName();
 			String method = phone.op.getText().toLowerCase();
 			//PositionMatch|Contains|Has_Every_Char
 			if("positionmatch".equals(method)) {

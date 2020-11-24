@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import com.xuanyue.db.xuan.core.exception.IndexException;
 import com.xuanyue.db.xuan.core.table.IBitIndex;
 import com.xuanyue.db.xuan.core.table.IColumn;
 import com.xuanyue.db.xuan.core.table.ISortElement;
 import com.xuanyue.db.xuan.core.table.sort.SortElement;
+import com.xuanyue.db.xuan.msg.VLAUETYPE;
 /**
  * boolean数据列
  * @author 解观海
@@ -150,15 +150,18 @@ public class BooleanIndex implements  IColumn{
 		return el;
 	}
 	@Override
-	public byte getType() {
-		return 4;
+	public VLAUETYPE getType() {
+		return VLAUETYPE.BOOLEAN;
 	}
 	@Override
 	public void saveRow(String path,int rowId) throws Exception {
 		data.saveRow(String.format("%s/data", path), rowId);
 		mask.saveRow(String.format("%s/mask", path), rowId);
 	}
-
+	@Override
+	public boolean checkSortE(boolean isDesc,String names) {
+		return true&&names==null;
+	}
 	
 	
 	

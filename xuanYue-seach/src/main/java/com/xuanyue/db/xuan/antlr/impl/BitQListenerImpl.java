@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import com.xuanyue.db.xuan.IResult;
 import com.xuanyue.db.xuan.SeachContext;
 import com.xuanyue.db.xuan.antlr.BitQBaseListener;
 import com.xuanyue.db.xuan.antlr.BitQParser.AndConditionContext;
@@ -39,11 +40,14 @@ import com.xuanyue.db.xuan.core.exception.IndexException;
 import com.xuanyue.db.xuan.core.exception.SQLException;
 import com.xuanyue.db.xuan.core.index.BitIndexIterator;
 import com.xuanyue.db.xuan.core.table.IBitIndex;
+import com.xuanyue.db.xuan.core.table.IColumn;
 import com.xuanyue.db.xuan.core.table.ISortElement;
 import com.xuanyue.db.xuan.core.table.IStringEncoding;
 import com.xuanyue.db.xuan.core.table.IXyTable;
 import com.xuanyue.db.xuan.core.table.sort.LimitHandler;
-import com.xuanyue.db.xuan.core.task.X2yThreadPoolExecutor;
+import com.xuanyue.db.xuan.core.task.Accelerater;
+import com.xuanyue.db.xuan.msg.VLAUETYPE;
+import com.xuanyue.db.xuan.msg.X2YValue;
 /**
  * 面向排序和分页的sql解析。
  * 一次查询，返回 记录总数，和结果结果集
@@ -53,40 +57,48 @@ import com.xuanyue.db.xuan.core.task.X2yThreadPoolExecutor;
  * @date 2020年10月16日
  *
  */
-public class BitQListenerImpl extends BitQBaseListener{
+public class BitQListenerImpl extends BitQBaseListener implements IResult{
 	
 	private IXyTable table;//表
 	private int maxSouce;//最大检索资源。
 	private List<String> fl = new ArrayList<>();//列名称
-	private List<Map<Integer,Object>> r = new ArrayList<>();//结果
+	private List<Map<String,X2YValue>> r = new ArrayList<>();//结果
 	private int count;//记录数
-	private byte[] types;//列数据类型
-	private Map<Integer,Object> parameters;//传入参数
-	private boolean accelerate;
+	private Map<String,VLAUETYPE> types = new HashMap<>();//列数据类型
+	private Map<String,Object> parameters;//传入参数
+	private int parallel;//加速
 	
 	
-	public void isAccelerate(boolean accelerate) {
-		this.accelerate = accelerate;
+	public void setParallel(int parallel) {
+		this.parallel = parallel;
 	}
 	
 	public BitQListenerImpl(int maxSource) {
 		this.maxSouce = maxSource;
 	}
 	
-	public void setParameters(Map<Integer,Object> parameters) {
-		this.parameters=parameters;
-	}
-	public byte[] getTypes() {
-		return types;
+	public void setParameters(Map<String,X2YValue> pV) {
+		this.parameters=new HashMap<>();
+		if(pV!=null) {
+			pV.forEach(  (k,v)->{
+				parameters.put(k, v.value());
+			});
+		}
 	}
 	public List<String> getFieldNames(){
 		return fl;
 	}
-	public int getCount() {
+	@Override
+	public int count() {
 		return this.count;
 	}
-	public List<Map<Integer,Object>> getData(){
+	@Override
+	public List<Map<String,X2YValue>> getData(){
 		return r;
+	}
+	@Override
+	public Map<String,VLAUETYPE> getTypes(){
+		return this.types;
 	}
 	@Override
 	public void exitResult(ResultContext ctx) {
@@ -96,8 +108,7 @@ public class BitQListenerImpl extends BitQBaseListener{
 			FullNameContext f = null;
 			for(int i=0;i<fs.size();i++) {
 				f = fs.get(i);
-				String fn = f.getText().toLowerCase();
-				fl.add(fn);
+				fl.add(f.getText().toLowerCase());
 			}
 		}
 	}
@@ -113,12 +124,19 @@ public class BitQListenerImpl extends BitQBaseListener{
 		
 		try {
 			table = SeachContext.getTable(tn);
-			types = new byte[fl.size()];
+			if(table==null) {
+				throw new IndexException(String.format("table %s is not exists", tn));
+			}
+			
 			for(int i=0;i<fl.size();i++) {
 				if("rowid".equals(fl.get(i) )) {
-					types[i]=0;
+					types.put( fl.get(i) , VLAUETYPE.INT);
 				}else {
-					types[i]=table.getType(fl.get(i));
+					IColumn c=table.getColumn(fl.get(i));
+					if(c==null) {
+						throw new IndexException(String.format("column %s is not exists", fl.get(i)));
+					}
+					types.put( fl.get(i) ,table.getType(fl.get(i)));
 				}
 				
 			}
@@ -137,12 +155,13 @@ public class BitQListenerImpl extends BitQBaseListener{
 		OrConditionContext or= ctx.orCondition();
 		List<IBitIndex> caches = null;// 第0个IBitIndex是 过滤结果后
 		
-		X2yThreadPoolExecutor accelerater = null;
+		Accelerater accelerater = null;
 		try {
 			caches = table.apply(maxSouce);
-			if(accelerate) {//多线程加速
+			if(parallel>1) {//多线程加速
 				accelerater = SeachContext.getAccelerate();
 				caches = SeachContext.toAccelerateEncapsulation(caches,accelerater);
+				accelerater.prepare(parallel);//等待加速可用
 			}
 			if(or!=null) {
 				//执行where过滤
@@ -310,36 +329,27 @@ public class BitQListenerImpl extends BitQBaseListener{
 				} finally {
 					if(bw!=null)bw.close();
 				}
-				
-				
-				
 			}else {
 				//组织结果
-				Map<Integer,Object> rx = null;
+				Map<String,X2YValue> rx = null;
 				Map<String,Object> tmp = null;
 				for (int j:indexs) {
 					rx = new HashMap<>();
 					tmp = table.read(j);
-					for(int i=0;i<fl.size();i++) {
-						if("rowid".equals( fl.get(i))) {
-							rx.put(i,j);
-						}else {
-							rx.put(i,tmp.get(fl.get(i)));
-						}
+					for(String fieldName:fl) {
+						rx.put(fieldName,  new X2YValue( types.get(fieldName), ("rowid".equals(fieldName)? j:tmp.get(fieldName)) ));
 					}
 					r.add(rx);
 				}
 			}
-			
 		} catch (Exception e) {
 			throw new IndexException(e);
 		}finally {
 			if(caches!=null) {
-				if(accelerate) {
+				if(accelerater!=null) {
 					try {
-						SeachContext.returnAccelerate(accelerater);
+						accelerater.free();
 					} catch (InterruptedException e) {
-						e.printStackTrace();
 					}
 					table.returnSource(SeachContext.unpacke(caches));
 				}else {
@@ -348,7 +358,6 @@ public class BitQListenerImpl extends BitQBaseListener{
 				
 			}
 		}
-		
 	}
 
 
@@ -490,7 +499,7 @@ public class BitQListenerImpl extends BitQBaseListener{
 		TerminalNode transAttr = value.TransArrt();
 		if(transAttr!=null) {
 			String ta = transAttr.getText();
-			v =parameters.get(  Integer.parseInt( ta.substring( 1 , ta.length()) ));
+			v =parameters.get(ta.substring( 1 , ta.length()));
 		}
 		
 		//log.debug(String.format("%s %s %s ", fn.getText(),method,v));

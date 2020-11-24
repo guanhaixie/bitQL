@@ -11,6 +11,7 @@ import com.xuanyue.db.xuan.core.table.IBitIndex;
 import com.xuanyue.db.xuan.core.table.IColumn;
 import com.xuanyue.db.xuan.core.table.ISortElement;
 import com.xuanyue.db.xuan.core.tools.Savor;
+import com.xuanyue.db.xuan.msg.VLAUETYPE;
 /**
  * 浮点型
  * 真实值 = ((float)持久化值) /eNum
@@ -189,8 +190,12 @@ public class FLOATIndex implements IColumn{
 		return data.getSortE(isDesc, names);
 	}
 	@Override
-	public byte getType() {
-		return 1;
+	public boolean checkSortE(boolean isDesc,String names) {
+		return true&&names==null;
+	}
+	@Override
+	public VLAUETYPE getType() {
+		return VLAUETYPE.FLOAT;
 	}
 	@Override
 	public void saveRow(String path, int rowId) throws Exception {

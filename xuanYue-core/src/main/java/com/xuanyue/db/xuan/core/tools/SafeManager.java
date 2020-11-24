@@ -63,7 +63,7 @@ public class SafeManager<T extends Source> {
 						r.add(objectPool.borrowObject());
 					}
 					return r;
-				}else {
+				}else{
 					safe.await();
 				}
 			}

@@ -2,6 +2,8 @@ package com.xuanyue.db.xuan.core.table;
 
 import java.util.List;
 
+import com.xuanyue.db.xuan.msg.VLAUETYPE;
+
 /**
  * 列接口
  * @author 解观海
@@ -46,6 +48,13 @@ public interface IColumn extends IPersistence{
 	 */
 	public List<ISortElement> getSortE(boolean isDesc,String ...names);
 	/**
+	 * 检查列排序是否支持
+	 * @param isDesc
+	 * @param names
+	 * @return
+	 */
+	public boolean checkSortE(boolean isDesc,String names);
+	/**
 	 *case 0://int
 	 *case 1://float
 	 *case 2://long
@@ -56,9 +65,10 @@ public interface IColumn extends IPersistence{
 	 *case 7://List<String>
 	 * @return
 	 */
-	public byte getType();
+	public VLAUETYPE getType();
 	
 	public void init(String path)throws Exception;
 	
 	public void toBatchLoadMode(String path);
+	
 }

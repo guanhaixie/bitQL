@@ -15,6 +15,8 @@
 	<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 	<slf4j.version>1.7.25</slf4j.version>
 	<logback.version>1.2.3</logback.version>
+	<jackson.version>2.4.0</jackson.version>
+	<junit.version>4.11</junit.version>
   </properties>
 <dependencies>
 	<dependency>
@@ -43,11 +45,25 @@
 	    <version>${logback.version}</version>  
 	</dependency>  
 		
+	<!-- JSON begin -->
+	<dependency>
+		<groupId>com.fasterxml.jackson.core</groupId>
+		<artifactId>jackson-databind</artifactId>
+		<version>${jackson.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>com.fasterxml.jackson.module</groupId>
+		<artifactId>jackson-module-jaxb-annotations</artifactId>
+		<version>${jackson.version}</version>
+	</dependency>
+	<!-- JSON end -->
 		<dependency>
-		    <groupId>com.alibaba</groupId>
-		    <artifactId>fastjson</artifactId>
-		    <version>1.2.47</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
 		</dependency>
+		
 </dependencies>
 <build>
 	<plugins>
@@ -83,6 +99,10 @@
 		<module>xuanYue-core</module>
 		<module>xuanYue-seach</module>
 		<module>xuanYue-utils</module>
-  </modules>
+		<module>xuanYue-servant</module>
+		<module>xuanYue-netty-base</module>
+		<module>xuanYue-alone-server</module>
+		<module>xuanYue-sdk</module>
+	</modules>
 	
 </project>

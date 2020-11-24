@@ -1,0 +1,31 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.x2y</groupId>
+    <artifactId>xuanYue-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>xuanYue-alone-server</artifactId>
+  
+  <dependencies>
+  	<dependency>
+	  <groupId>com.x2y</groupId>
+	  <artifactId>xuanYue-netty-base</artifactId>
+	  <version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+	  <groupId>com.x2y</groupId>
+	  <artifactId>xuanYue-seach</artifactId>
+	  <version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
+	<dependency>
+	    <groupId>io.netty</groupId>
+	    <artifactId>netty-all</artifactId>
+	    <version>4.1.49.Final</version>
+	</dependency>
+		
+  </dependencies>
+  
+  
+</project>

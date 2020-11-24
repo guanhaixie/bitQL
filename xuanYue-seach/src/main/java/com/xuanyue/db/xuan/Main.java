@@ -10,13 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import com.alibaba.fastjson.JSONObject;
 import com.xuanyue.db.xuan.antlr.impl.QueryRequest;
-import com.xuanyue.db.xuan.antlr.impl.QueryResult;
 import com.xuanyue.db.xuan.core.db.DBMeta;
 import com.xuanyue.db.xuan.core.db.IXyDB;
 import com.xuanyue.db.xuan.core.db.TableMeta;
@@ -31,8 +30,8 @@ import com.xuanyue.db.xuan.core.task.X2yThreadPoolExecutor;
 
 
 public class Main {
-	
-	static X2yThreadPoolExecutor exe = null;//new X2yThreadPoolExecutor(10, 10, 10, TimeUnit.SECONDS, 1000);
+	static String sql = null;
+	static X2yThreadPoolExecutor exe = null;//new X2yThreadPoolExecutor(100, 100, 10, TimeUnit.SECONDS, 1000);
 	static ArrayBlockingQueue<Long> timeQ = null;//new ArrayBlockingQueue<Runnable>(1000);
 	static void init(Scanner sc) throws Exception{
 		DBMeta dbMeta = new DBMeta();
@@ -111,7 +110,7 @@ public class Main {
 		
 		while(true) {
 			QueryRequest re = new QueryRequest();
-			String sql = null;
+			
 			a:while(true) {
 				System.out.print("xiegh [sql]>");
 				sql = sc.nextLine();
@@ -124,7 +123,8 @@ public class Main {
 			re.setSql(sql);
 			//re.setSql("select phone,price,create_time from T_PH where   Phone_seach(phone,Contains,'999') price>2000f and ismy=true and city>3 order by price  limit 12000000,10;");
 //			re.setSql(args[1]);
-			QueryResult x = null;
+//			QueryResult x = null;
+			// /*parallel(6)*/select phone,price,create_time from T_PH where   Phone_seach(phone,Contains,'999') price>2000f and ismy=true and city>3 order by price  limit 12000000,10
 			System.out.println();
 			System.out.println(new Date());
 			
@@ -149,55 +149,74 @@ public class Main {
 					e1.printStackTrace();
 				}
 			}
-			
-			//x = SeachContext.query(re);
+			int size = parallel>0?parallel:1;
+			exe = new X2yThreadPoolExecutor(size, size, 10, TimeUnit.SECONDS, 1000);
+			IResult res = SeachContext.query(sql);
+			System.out.println("sql");
 			timeQ = new ArrayBlockingQueue<Long>(1000);
-			exe = new X2yThreadPoolExecutor(parallel, parallel, 10, TimeUnit.SECONDS, 1000);
-			List<Future<QueryResult>> rL = new ArrayList<>();
 			long now = System.currentTimeMillis();
-			for(int i=0;i<times;i++) {
+			if(parallel>1) {
+				List<Future<?>> fs = new ArrayList<>();
+				for(int i=0;i<times;i++) {
+					fs.add(exe.submit( ()->{
+						long start = System.currentTimeMillis();
+						System.out.println("start");
+						SeachContext.query(sql);
+						
+						long dx = System.currentTimeMillis() - start;
+						System.out.println("end"+dx);
+						try {
+							timeQ.put(dx);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
+					}  ));
+				}
 				
-				Future<QueryResult> tr = exe.submit(new Callable<QueryResult>(){
-
-					@Override
-					public QueryResult call() throws Exception {
-						long s = System.currentTimeMillis();
-						QueryResult xx = SeachContext.query(re,true);
-						xx.setRunTimeLong(System.currentTimeMillis()-s);
-						return xx;
+				fs.forEach( t->{
+					try {
+						t.get();
+					} catch (Exception e1) {
+						e1.printStackTrace();
 					}
-					
 				});
-				rL.add(tr);
+				
+			}else {
+				
 			}
+			
 			long max = 0;
 			long min = 100000000;
 			long total = 0;
-			for(Future<QueryResult> e:rL) {
-				x = e.get();
-				if(max<x.getRunTimeLong()) {
-					max=x.getRunTimeLong();
+
+			for(long d:timeQ) {
+				if(max<d) {
+					max=d;
 				}
-				if(min>x.getRunTimeLong()) {
-					min = x.getRunTimeLong();
+				if(min>d) {
+					min=d;
 				}
-				total+=x.getRunTimeLong();
+				total+=d;
 			}
 			
-			System.out.println("最长执行时间："+max);
-			System.out.println("最短执行时间："+min);
-			System.out.println("平均执行时间："+(total/times));
-			System.out.println(x.getFl());
-			x.getResult().forEach( e->{
+			System.out.println(res.count());
+			
+			res.getData().forEach( e->{
 				System.out.println(e);
 			});
-			System.out.println(x.getCount());
+			
 			long xd = System.currentTimeMillis()-now;
+			
+			System.out.println("最长响应时间："+max);
+			System.out.println("最短响应时间："+min);
+			System.out.println("平均响应时间："+(total/times));
+			System.out.println(String.format("QPS  times*1000.0/总时长= %s*1000.0/%s =%s ",times,xd, ( times*1000.0/xd  )  ));
 			System.out.println(xd/times);
-			System.out.println("总耗时："+ xd);
+			
 			System.out.println(new Date());
 			
-			exe.shutdown();
+			if(exe!=null)exe.shutdown();
+			exe = null;
 		}
 		
 	}

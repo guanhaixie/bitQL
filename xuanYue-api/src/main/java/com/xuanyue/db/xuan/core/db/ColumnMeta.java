@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.xuanyue.db.xuan.core.table.IColumn;
 /**
  * 列信息
@@ -14,6 +16,7 @@ import com.xuanyue.db.xuan.core.table.IColumn;
  * @date 2020年6月23日
  *
  */
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ColumnMeta{
 
 	private String name;
@@ -21,6 +24,21 @@ public class ColumnMeta{
 	private List<Integer> parameters;
 	private Map<String,String> name2Id;
 	
+	@JsonIgnore
+	public String getAllPatameters() {
+		if(parameters==null) {
+			return "";
+		}else {
+			StringBuffer r = new StringBuffer();
+			for(int i=0;i<parameters.size();i++) {
+				r.append(parameters.get(i));
+				if(i<parameters.size()-1) {
+					r.append(",");
+				}
+			}
+			return r.toString();
+		}
+	}
 	public Map<String, String> getName2Id() {
 		return name2Id;
 	}
@@ -51,7 +69,9 @@ public class ColumnMeta{
 	
 	@SuppressWarnings("unchecked")
 	public IColumn column() throws ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		Class<? extends IColumn> cla = (Class<? extends IColumn>) Class.forName(className);
+		Class<? extends IColumn> cla = (Class<? extends IColumn>) Class.forName(
+				String.format("com.xuanyue.db.xuan.core.index.%s", className)
+				);
 		if(parameters!=null&&parameters.size()>0) {
 			@SuppressWarnings("rawtypes")
 			Class[] types = new Class[parameters.size()];

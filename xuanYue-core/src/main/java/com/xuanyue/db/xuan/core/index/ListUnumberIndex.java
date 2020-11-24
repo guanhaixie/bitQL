@@ -8,6 +8,9 @@ import com.xuanyue.db.xuan.core.exception.IndexException;
 import com.xuanyue.db.xuan.core.table.IBitIndex;
 import com.xuanyue.db.xuan.core.table.IColumn;
 import com.xuanyue.db.xuan.core.table.ISortElement;
+import com.xuanyue.db.xuan.core.table.IXyTable;
+import com.xuanyue.db.xuan.core.table.XyTable;
+import com.xuanyue.db.xuan.msg.VLAUETYPE;
 /**
  * 无符号整数集合,一个列需要制定最多放N个数值。一个数值有size个bit
  * 这样的数据列需要慎重考虑，因为N的大小，因为列大小为     N*size 
@@ -23,12 +26,17 @@ public final class ListUnumberIndex implements IColumn{
 
 	
 	private List<UNumberIndex> data;
+	private IBitIndex overflowMask = new BitIndex();
+	private IXyTable overflowTable;
 	
 	public ListUnumberIndex(int maxNum,int size) {
 		data = new ArrayList<>();
 		for(int i=0;i<maxNum;i++) {
 			data.add(new UNumberIndex(size));
 		}
+		overflowTable = new XyTable("overflowTable");
+		overflowTable.addColumn("overflowIndex", new UNumberIndex(32));
+		overflowTable.addColumn("overflowValue", new UNumberIndex(size));
 	}
 	
 	@Override
@@ -36,18 +44,24 @@ public final class ListUnumberIndex implements IColumn{
 		for(int i=0;i<data.size();i++) {
 			data.get(i).save(String.format("%s/%s", path,i));
 		}
+		overflowTable.save(String.format("%s/overflowTable", path));
+		overflowMask.save(String.format("%s/overflowMask", path));
 	}
 	@Override
 	public void toBatchLoadMode(String path) {
 		for(int i=0;i<data.size();i++) {
 			data.get(i).toBatchLoadMode(String.format("%s/%s", path,i));
 		}
+		overflowTable.toBatchLoadMode(String.format("%s/overflowTable", path));
+		overflowMask = new BatchBitIndex(String.format("%s/overflowMask", path));
 	}
 	@Override
 	public void load(String path) throws Exception {
 		for(int i=0;i<data.size();i++) {
 			data.get(i).load(String.format("%s/%s", path,i));
-		}		
+		}	
+		overflowTable.load(String.format("%s/overflowTable", path));
+		overflowMask.load(String.format("%s/overflowMask", path));
 	}
 	@Override
 	public void init(String path) throws Exception{
@@ -58,7 +72,8 @@ public final class ListUnumberIndex implements IColumn{
 		for(int i=0;i<data.size();i++) {
 			data.get(i).init(String.format("%s/%s", path,i));
 		}
-		
+		overflowTable.init(String.format("%s/overflowTable", path));
+		overflowMask.init(String.format("%s/overflowMask", path));
 	}
 	@Override
 	public void equeals(IBitIndex cache, IBitIndex now, Number value) {
@@ -67,6 +82,23 @@ public final class ListUnumberIndex implements IColumn{
 			data.get(i).equeals(now,null, value);
 			cache.or(now);
 		}
+		List<IBitIndex> ofBis = null;
+		try {
+			ofBis = overflowTable.apply(1);
+			overflowTable.expr("overflowValue", "=", value, ofBis);
+			
+			UNumberIndex c = (UNumberIndex)overflowTable.getName2column().get("overflowIndex");
+			IBitIndex bs = ofBis.get(0);
+			for (int j = bs.nextSetBit(0); j >= 0; j = bs.nextSetBit(j+1)) {
+				cache.set(c.get(j).intValue());
+			}
+		} catch(Exception e){
+			throw new IndexException("error at overflowValue match");
+		}finally {
+			overflowTable.returnSource(ofBis);
+		}
+		
+		
 	}
 
 	@Override
@@ -167,10 +199,13 @@ public final class ListUnumberIndex implements IColumn{
 	public List<ISortElement> getSortE(boolean isDesc, String... names) {
 		throw new IndexException(" not support the method getSortE");
 	}
-
 	@Override
-	public byte getType() {
-		return 7;
+	public boolean checkSortE(boolean isDesc,String names) {
+		return false;
+	}
+	@Override
+	public VLAUETYPE getType() {
+		return VLAUETYPE.LISTNUM;
 	}
 
 	@Override

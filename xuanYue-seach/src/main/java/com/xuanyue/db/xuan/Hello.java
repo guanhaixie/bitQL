@@ -135,7 +135,7 @@ public class Hello {
 		//re.setSql("select source_no,province,business_labels from t_biz where (business_labels Contains 1 or business_labels contains 2) and city = 112 and source_no < 13521193609l");
 		re.setSql(sql);
 		System.out.println(sql);
-		QueryResult x = SeachContext.query(re,false);
+		QueryResult x = null;//SeachContext.query(re,false);
 		System.out.println();
 		System.out.println(x.getCount());
 		System.out.println(x.getFl());
