@@ -1,9 +1,10 @@
-// Generated from BitQ.g4 by ANTLR 4.7.2
+// Generated from BitQ.g4 by ANTLR 4.4
 
 	package com.xuanyue.db.xuan.antlr;
 
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -18,300 +19,300 @@ public class BitQBaseListener implements BitQListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterQuery(BitQParser.QueryContext ctx) { }
+	@Override public void enterOrCondition(@NotNull BitQParser.OrConditionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitQuery(BitQParser.QueryContext ctx) { }
+	@Override public void exitOrCondition(@NotNull BitQParser.OrConditionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpr(BitQParser.ExprContext ctx) { }
+	@Override public void enterOrNot(@NotNull BitQParser.OrNotContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpr(BitQParser.ExprContext ctx) { }
+	@Override public void exitOrNot(@NotNull BitQParser.OrNotContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterRepo(BitQParser.RepoContext ctx) { }
+	@Override public void enterTjoinPart(@NotNull BitQParser.TjoinPartContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitRepo(BitQParser.RepoContext ctx) { }
+	@Override public void exitTjoinPart(@NotNull BitQParser.TjoinPartContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSaveAsFile(BitQParser.SaveAsFileContext ctx) { }
+	@Override public void enterGroupCondition(@NotNull BitQParser.GroupConditionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSaveAsFile(BitQParser.SaveAsFileContext ctx) { }
+	@Override public void exitGroupCondition(@NotNull BitQParser.GroupConditionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTablePart(BitQParser.TablePartContext ctx) { }
+	@Override public void enterAndCondition(@NotNull BitQParser.AndConditionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTablePart(BitQParser.TablePartContext ctx) { }
+	@Override public void exitAndCondition(@NotNull BitQParser.AndConditionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTjoinPart(BitQParser.TjoinPartContext ctx) { }
+	@Override public void enterPhone_seach(@NotNull BitQParser.Phone_seachContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTjoinPart(BitQParser.TjoinPartContext ctx) { }
+	@Override public void exitPhone_seach(@NotNull BitQParser.Phone_seachContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterOrCondition(BitQParser.OrConditionContext ctx) { }
+	@Override public void enterQuery(@NotNull BitQParser.QueryContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitOrCondition(BitQParser.OrConditionContext ctx) { }
+	@Override public void exitQuery(@NotNull BitQParser.QueryContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAndCondition(BitQParser.AndConditionContext ctx) { }
+	@Override public void enterRepo(@NotNull BitQParser.RepoContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAndCondition(BitQParser.AndConditionContext ctx) { }
+	@Override public void exitRepo(@NotNull BitQParser.RepoContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterConditionElement(BitQParser.ConditionElementContext ctx) { }
+	@Override public void enterSaveAsFile(@NotNull BitQParser.SaveAsFileContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitConditionElement(BitQParser.ConditionElementContext ctx) { }
+	@Override public void exitSaveAsFile(@NotNull BitQParser.SaveAsFileContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterGroupCondition(BitQParser.GroupConditionContext ctx) { }
+	@Override public void enterValues(@NotNull BitQParser.ValuesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitGroupCondition(BitQParser.GroupConditionContext ctx) { }
+	@Override public void exitValues(@NotNull BitQParser.ValuesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterConditionExpr(BitQParser.ConditionExprContext ctx) { }
+	@Override public void enterFullName(@NotNull BitQParser.FullNameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitConditionExpr(BitQParser.ConditionExprContext ctx) { }
+	@Override public void exitFullName(@NotNull BitQParser.FullNameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterValues(BitQParser.ValuesContext ctx) { }
+	@Override public void enterConditionElement(@NotNull BitQParser.ConditionElementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitValues(BitQParser.ValuesContext ctx) { }
+	@Override public void exitConditionElement(@NotNull BitQParser.ConditionElementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTo_date(BitQParser.To_dateContext ctx) { }
+	@Override public void enterSortE(@NotNull BitQParser.SortEContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTo_date(BitQParser.To_dateContext ctx) { }
+	@Override public void exitSortE(@NotNull BitQParser.SortEContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterResult(BitQParser.ResultContext ctx) { }
+	@Override public void enterResult(@NotNull BitQParser.ResultContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitResult(BitQParser.ResultContext ctx) { }
+	@Override public void exitResult(@NotNull BitQParser.ResultContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFullName(BitQParser.FullNameContext ctx) { }
+	@Override public void enterTo_date(@NotNull BitQParser.To_dateContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFullName(BitQParser.FullNameContext ctx) { }
+	@Override public void exitTo_date(@NotNull BitQParser.To_dateContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBoolTF(BitQParser.BoolTFContext ctx) { }
+	@Override public void enterTablePart(@NotNull BitQParser.TablePartContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBoolTF(BitQParser.BoolTFContext ctx) { }
+	@Override public void exitTablePart(@NotNull BitQParser.TablePartContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterOrNot(BitQParser.OrNotContext ctx) { }
+	@Override public void enterBoolTF(@NotNull BitQParser.BoolTFContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitOrNot(BitQParser.OrNotContext ctx) { }
+	@Override public void exitBoolTF(@NotNull BitQParser.BoolTFContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAndNot(BitQParser.AndNotContext ctx) { }
+	@Override public void enterConditionExpr(@NotNull BitQParser.ConditionExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAndNot(BitQParser.AndNotContext ctx) { }
+	@Override public void exitConditionExpr(@NotNull BitQParser.ConditionExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPhone_seach(BitQParser.Phone_seachContext ctx) { }
+	@Override public void enterLimit(@NotNull BitQParser.LimitContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPhone_seach(BitQParser.Phone_seachContext ctx) { }
+	@Override public void exitLimit(@NotNull BitQParser.LimitContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSortE(BitQParser.SortEContext ctx) { }
+	@Override public void enterExpr(@NotNull BitQParser.ExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSortE(BitQParser.SortEContext ctx) { }
+	@Override public void exitExpr(@NotNull BitQParser.ExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSortBy(BitQParser.SortByContext ctx) { }
+	@Override public void enterSortBy(@NotNull BitQParser.SortByContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSortBy(BitQParser.SortByContext ctx) { }
+	@Override public void exitSortBy(@NotNull BitQParser.SortByContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLimit(BitQParser.LimitContext ctx) { }
+	@Override public void enterMix(@NotNull BitQParser.MixContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLimit(BitQParser.LimitContext ctx) { }
+	@Override public void exitMix(@NotNull BitQParser.MixContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMix(BitQParser.MixContext ctx) { }
+	@Override public void enterAndNot(@NotNull BitQParser.AndNotContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMix(BitQParser.MixContext ctx) { }
+	@Override public void exitAndNot(@NotNull BitQParser.AndNotContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterEveryRule(ParserRuleContext ctx) { }
+	@Override public void enterEveryRule(@NotNull ParserRuleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitEveryRule(ParserRuleContext ctx) { }
+	@Override public void exitEveryRule(@NotNull ParserRuleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void visitTerminal(TerminalNode node) { }
+	@Override public void visitTerminal(@NotNull TerminalNode node) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void visitErrorNode(ErrorNode node) { }
+	@Override public void visitErrorNode(@NotNull ErrorNode node) { }
 }

@@ -1,4 +1,4 @@
-// Generated from BitQ.g4 by ANTLR 4.7.2
+// Generated from BitQ.g4 by ANTLR 4.4
 
 	package com.xuanyue.db.xuan.antlr;
 
@@ -13,90 +13,39 @@ import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class BitQLexer extends Lexer {
-	static { RuntimeMetaData.checkVersion("4.7.2", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.4", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, TransArrt=9, 
+		T__7=1, T__6=2, T__5=3, T__4=4, T__3=5, T__2=6, T__1=7, T__0=8, TransArrt=9, 
 		SAVE=10, AS=11, MIX=12, DESC=13, ASC=14, Phone_seach=15, PositionMatch=16, 
 		Contains=17, Has_Every_Char=18, SELECT=19, FROM=20, WHERE=21, ON=22, LEFT=23, 
 		RIGHT=24, JOIN=25, AND=26, OR=27, NOT=28, TO_DATE=29, ExprNot=30, COMMA=31, 
 		SEMI=32, LIMIT=33, Order=34, By=35, NAME=36, DOT=37, Brackets_L=38, Brackets_R=39, 
 		STRING=40, NUM=41, TRUE=42, FALSE=43, WS=44, SQL_COMMENT=45;
-	public static String[] channelNames = {
-		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
-	};
-
 	public static String[] modeNames = {
 		"DEFAULT_MODE"
 	};
 
-	private static String[] makeRuleNames() {
-		return new String[] {
-			"T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "TransArrt", 
-			"SAVE", "AS", "MIX", "DESC", "ASC", "Phone_seach", "PositionMatch", "Contains", 
-			"Has_Every_Char", "SELECT", "FROM", "WHERE", "ON", "LEFT", "RIGHT", "JOIN", 
-			"AND", "OR", "NOT", "TO_DATE", "ExprNot", "COMMA", "SEMI", "LIMIT", "Order", 
-			"By", "NAME", "DOT", "Brackets_L", "Brackets_R", "STRING", "NUM", "TRUE", 
-			"FALSE", "WS", "SQL_COMMENT"
-		};
-	}
-	public static final String[] ruleNames = makeRuleNames();
-
-	private static String[] makeLiteralNames() {
-		return new String[] {
-			null, "'='", "'!='", "'>='", "'>'", "'<='", "'<'", "'['", "']'", null, 
-			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, null, null, null, null, null, null, "'!'", "','", "';'", 
-			null, null, null, null, "'.'", "'('", "')'"
-		};
-	}
-	private static final String[] _LITERAL_NAMES = makeLiteralNames();
-	private static String[] makeSymbolicNames() {
-		return new String[] {
-			null, null, null, null, null, null, null, null, null, "TransArrt", "SAVE", 
-			"AS", "MIX", "DESC", "ASC", "Phone_seach", "PositionMatch", "Contains", 
-			"Has_Every_Char", "SELECT", "FROM", "WHERE", "ON", "LEFT", "RIGHT", "JOIN", 
-			"AND", "OR", "NOT", "TO_DATE", "ExprNot", "COMMA", "SEMI", "LIMIT", "Order", 
-			"By", "NAME", "DOT", "Brackets_L", "Brackets_R", "STRING", "NUM", "TRUE", 
-			"FALSE", "WS", "SQL_COMMENT"
-		};
-	}
-	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
-	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
-
-	/**
-	 * @deprecated Use {@link #VOCABULARY} instead.
-	 */
-	@Deprecated
-	public static final String[] tokenNames;
-	static {
-		tokenNames = new String[_SYMBOLIC_NAMES.length];
-		for (int i = 0; i < tokenNames.length; i++) {
-			tokenNames[i] = VOCABULARY.getLiteralName(i);
-			if (tokenNames[i] == null) {
-				tokenNames[i] = VOCABULARY.getSymbolicName(i);
-			}
-
-			if (tokenNames[i] == null) {
-				tokenNames[i] = "<INVALID>";
-			}
-		}
-	}
-
-	@Override
-	@Deprecated
-	public String[] getTokenNames() {
-		return tokenNames;
-	}
-
-	@Override
-
-	public Vocabulary getVocabulary() {
-		return VOCABULARY;
-	}
+	public static final String[] tokenNames = {
+		"'\\u0000'", "'\\u0001'", "'\\u0002'", "'\\u0003'", "'\\u0004'", "'\\u0005'", 
+		"'\\u0006'", "'\\u0007'", "'\b'", "'\t'", "'\n'", "'\\u000B'", "'\f'", 
+		"'\r'", "'\\u000E'", "'\\u000F'", "'\\u0010'", "'\\u0011'", "'\\u0012'", 
+		"'\\u0013'", "'\\u0014'", "'\\u0015'", "'\\u0016'", "'\\u0017'", "'\\u0018'", 
+		"'\\u0019'", "'\\u001A'", "'\\u001B'", "'\\u001C'", "'\\u001D'", "'\\u001E'", 
+		"'\\u001F'", "' '", "'!'", "'\"'", "'#'", "'$'", "'%'", "'&'", "'''", 
+		"'('", "')'", "'*'", "'+'", "','", "'-'"
+	};
+	public static final String[] ruleNames = {
+		"T__7", "T__6", "T__5", "T__4", "T__3", "T__2", "T__1", "T__0", "TransArrt", 
+		"SAVE", "AS", "MIX", "DESC", "ASC", "Phone_seach", "PositionMatch", "Contains", 
+		"Has_Every_Char", "SELECT", "FROM", "WHERE", "ON", "LEFT", "RIGHT", "JOIN", 
+		"AND", "OR", "NOT", "TO_DATE", "ExprNot", "COMMA", "SEMI", "LIMIT", "Order", 
+		"By", "NAME", "DOT", "Brackets_L", "Brackets_R", "STRING", "NUM", "TRUE", 
+		"FALSE", "WS", "SQL_COMMENT"
+	};
 
 
 		
@@ -137,13 +86,13 @@ public class BitQLexer extends Lexer {
 	public String getGrammarFileName() { return "BitQ.g4"; }
 
 	@Override
+	public String[] getTokenNames() { return tokenNames; }
+
+	@Override
 	public String[] getRuleNames() { return ruleNames; }
 
 	@Override
 	public String getSerializedATN() { return _serializedATN; }
-
-	@Override
-	public String[] getChannelNames() { return channelNames; }
 
 	@Override
 	public String[] getModeNames() { return modeNames; }
@@ -154,27 +103,23 @@ public class BitQLexer extends Lexer {
 	@Override
 	public void action(RuleContext _localctx, int ruleIndex, int actionIndex) {
 		switch (ruleIndex) {
-		case 44:
-			SQL_COMMENT_action((RuleContext)_localctx, actionIndex);
-			break;
+		case 44: SQL_COMMENT_action((RuleContext)_localctx, actionIndex); break;
 		}
 	}
 	private void SQL_COMMENT_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
-		case 0:
-			 showme(); 
-			break;
+		case 0:  showme();  break;
 		}
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2/\u015d\b\1\4\2\t"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\2/\u015d\b\1\4\2\t"+
 		"\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
 		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
 		"\4\32\t\32\4\33\t\33\4\34\t\34\4\35\t\35\4\36\t\36\4\37\t\37\4 \t \4!"+
 		"\t!\4\"\t\"\4#\t#\4$\t$\4%\t%\4&\t&\4\'\t\'\4(\t(\4)\t)\4*\t*\4+\t+\4"+
-		",\t,\4-\t-\4.\t.\3\2\3\2\3\3\3\3\3\3\3\4\3\4\3\4\3\5\3\5\3\6\3\6\3\6\3"+
+		",\t,\4-\t-\4.\t.\3\2\3\2\3\2\3\3\3\3\3\3\3\4\3\4\3\5\3\5\3\5\3\6\3\6\3"+
 		"\7\3\7\3\b\3\b\3\t\3\t\3\n\3\n\6\ns\n\n\r\n\16\nt\3\13\3\13\3\13\3\13"+
 		"\3\13\3\f\3\f\3\f\3\r\3\r\3\r\3\r\3\16\3\16\3\16\3\16\3\16\3\17\3\17\3"+
 		"\17\3\17\3\20\3\20\3\20\3\20\3\20\3\20\3\20\3\20\3\20\3\20\3\20\3\20\3"+
@@ -197,26 +142,26 @@ public class BitQLexer extends Lexer {
 		"\2UUuu\4\2CCcc\4\2XXxx\4\2GGgg\4\2OOoo\4\2KKkk\4\2ZZzz\4\2FFff\4\2EEe"+
 		"e\4\2RRrr\4\2JJjj\4\2QQqq\4\2PPpp\4\2VVvv\4\2TTtt\4\2[[{{\4\2NNnn\4\2"+
 		"HHhh\4\2YYyy\4\2IIii\4\2LLll\4\2DDdd\4\2C\\c|\4\2))^^\4\2$$^^\4\2hhnn"+
-		"\4\2WWww\5\2\13\f\17\17\"\"\2\u0169\2\3\3\2\2\2\2\5\3\2\2\2\2\7\3\2\2"+
-		"\2\2\t\3\2\2\2\2\13\3\2\2\2\2\r\3\2\2\2\2\17\3\2\2\2\2\21\3\2\2\2\2\23"+
-		"\3\2\2\2\2\25\3\2\2\2\2\27\3\2\2\2\2\31\3\2\2\2\2\33\3\2\2\2\2\35\3\2"+
-		"\2\2\2\37\3\2\2\2\2!\3\2\2\2\2#\3\2\2\2\2%\3\2\2\2\2\'\3\2\2\2\2)\3\2"+
-		"\2\2\2+\3\2\2\2\2-\3\2\2\2\2/\3\2\2\2\2\61\3\2\2\2\2\63\3\2\2\2\2\65\3"+
-		"\2\2\2\2\67\3\2\2\2\29\3\2\2\2\2;\3\2\2\2\2=\3\2\2\2\2?\3\2\2\2\2A\3\2"+
-		"\2\2\2C\3\2\2\2\2E\3\2\2\2\2G\3\2\2\2\2I\3\2\2\2\2K\3\2\2\2\2M\3\2\2\2"+
-		"\2O\3\2\2\2\2Q\3\2\2\2\2S\3\2\2\2\2U\3\2\2\2\2W\3\2\2\2\2Y\3\2\2\2\2["+
-		"\3\2\2\2\3]\3\2\2\2\5_\3\2\2\2\7b\3\2\2\2\te\3\2\2\2\13g\3\2\2\2\rj\3"+
-		"\2\2\2\17l\3\2\2\2\21n\3\2\2\2\23p\3\2\2\2\25v\3\2\2\2\27{\3\2\2\2\31"+
-		"~\3\2\2\2\33\u0082\3\2\2\2\35\u0087\3\2\2\2\37\u008b\3\2\2\2!\u0097\3"+
-		"\2\2\2#\u00a5\3\2\2\2%\u00ae\3\2\2\2\'\u00bd\3\2\2\2)\u00c4\3\2\2\2+\u00c9"+
+		"\4\2WWww\5\2\13\f\17\17\"\"\u0169\2\3\3\2\2\2\2\5\3\2\2\2\2\7\3\2\2\2"+
+		"\2\t\3\2\2\2\2\13\3\2\2\2\2\r\3\2\2\2\2\17\3\2\2\2\2\21\3\2\2\2\2\23\3"+
+		"\2\2\2\2\25\3\2\2\2\2\27\3\2\2\2\2\31\3\2\2\2\2\33\3\2\2\2\2\35\3\2\2"+
+		"\2\2\37\3\2\2\2\2!\3\2\2\2\2#\3\2\2\2\2%\3\2\2\2\2\'\3\2\2\2\2)\3\2\2"+
+		"\2\2+\3\2\2\2\2-\3\2\2\2\2/\3\2\2\2\2\61\3\2\2\2\2\63\3\2\2\2\2\65\3\2"+
+		"\2\2\2\67\3\2\2\2\29\3\2\2\2\2;\3\2\2\2\2=\3\2\2\2\2?\3\2\2\2\2A\3\2\2"+
+		"\2\2C\3\2\2\2\2E\3\2\2\2\2G\3\2\2\2\2I\3\2\2\2\2K\3\2\2\2\2M\3\2\2\2\2"+
+		"O\3\2\2\2\2Q\3\2\2\2\2S\3\2\2\2\2U\3\2\2\2\2W\3\2\2\2\2Y\3\2\2\2\2[\3"+
+		"\2\2\2\3]\3\2\2\2\5`\3\2\2\2\7c\3\2\2\2\te\3\2\2\2\13h\3\2\2\2\rj\3\2"+
+		"\2\2\17l\3\2\2\2\21n\3\2\2\2\23p\3\2\2\2\25v\3\2\2\2\27{\3\2\2\2\31~\3"+
+		"\2\2\2\33\u0082\3\2\2\2\35\u0087\3\2\2\2\37\u008b\3\2\2\2!\u0097\3\2\2"+
+		"\2#\u00a5\3\2\2\2%\u00ae\3\2\2\2\'\u00bd\3\2\2\2)\u00c4\3\2\2\2+\u00c9"+
 		"\3\2\2\2-\u00cf\3\2\2\2/\u00d2\3\2\2\2\61\u00d7\3\2\2\2\63\u00dd\3\2\2"+
 		"\2\65\u00e2\3\2\2\2\67\u00e6\3\2\2\29\u00e9\3\2\2\2;\u00ed\3\2\2\2=\u00f5"+
 		"\3\2\2\2?\u00f7\3\2\2\2A\u00f9\3\2\2\2C\u00fb\3\2\2\2E\u0101\3\2\2\2G"+
 		"\u0107\3\2\2\2I\u010a\3\2\2\2K\u0111\3\2\2\2M\u0113\3\2\2\2O\u0115\3\2"+
 		"\2\2Q\u012b\3\2\2\2S\u012e\3\2\2\2U\u013d\3\2\2\2W\u0142\3\2\2\2Y\u0149"+
-		"\3\2\2\2[\u014f\3\2\2\2]^\7?\2\2^\4\3\2\2\2_`\7#\2\2`a\7?\2\2a\6\3\2\2"+
-		"\2bc\7@\2\2cd\7?\2\2d\b\3\2\2\2ef\7@\2\2f\n\3\2\2\2gh\7>\2\2hi\7?\2\2"+
-		"i\f\3\2\2\2jk\7>\2\2k\16\3\2\2\2lm\7]\2\2m\20\3\2\2\2no\7_\2\2o\22\3\2"+
+		"\3\2\2\2[\u014f\3\2\2\2]^\7>\2\2^_\7?\2\2_\4\3\2\2\2`a\7#\2\2ab\7?\2\2"+
+		"b\6\3\2\2\2cd\7]\2\2d\b\3\2\2\2ef\7@\2\2fg\7?\2\2g\n\3\2\2\2hi\7>\2\2"+
+		"i\f\3\2\2\2jk\7_\2\2k\16\3\2\2\2lm\7?\2\2m\20\3\2\2\2no\7@\2\2o\22\3\2"+
 		"\2\2pr\7A\2\2qs\t\2\2\2rq\3\2\2\2st\3\2\2\2tr\3\2\2\2tu\3\2\2\2u\24\3"+
 		"\2\2\2vw\t\3\2\2wx\t\4\2\2xy\t\5\2\2yz\t\6\2\2z\26\3\2\2\2{|\t\4\2\2|"+
 		"}\t\3\2\2}\30\3\2\2\2~\177\t\7\2\2\177\u0080\t\b\2\2\u0080\u0081\t\t\2"+

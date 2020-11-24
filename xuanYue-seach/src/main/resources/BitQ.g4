@@ -33,6 +33,24 @@ grammar BitQ;
 	}
 }
 
+@parser::members{
+@Override
+public Token match(int ttype) throws RecognitionException {
+	Token t = getCurrentToken();
+	if ( t.getType()==ttype ) {
+		if ( ttype==Token.EOF ) {
+			matchedEOF = true;
+		}
+		_errHandler.reportMatch(this);
+		consume();
+		return t;
+	}
+	else {
+		throw new RuntimeException("miss "+ tokenNames[ttype]);
+	}
+	
+}
+}
 query : expr;
 
 //expr : SELECT result FROM repo (WHERE orCondition  groupBy? sortBy? mix? limit? SEMI)?;
