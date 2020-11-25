@@ -121,7 +121,7 @@ public class Main {
 				}
 			}
 			re.setSql(sql);
-			//re.setSql("select phone,price,create_time from T_PH where   Phone_seach(phone,Contains,'999') price>2000f and ismy=true and city>3 order by price  limit 12000000,10;");
+			//re.setSql("select phone,price,create_time from T_PH where   Phone_seach(phone,Contains,'999') and price>2000f and ismy=true and city>3 order by price  limit 12000000,10;");
 //			re.setSql(args[1]);
 //			QueryResult x = null;
 			// /*parallel(6)*/select phone,price,create_time from T_PH where   Phone_seach(phone,Contains,'999') price>2000f and ismy=true and city>3 order by price  limit 12000000,10

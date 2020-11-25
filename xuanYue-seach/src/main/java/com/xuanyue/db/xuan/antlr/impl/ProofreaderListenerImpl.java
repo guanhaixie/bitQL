@@ -305,9 +305,11 @@ public class ProofreaderListenerImpl extends BitQBaseListener{
 				throw new SQLException("error at : "+to_date.getText());
 			}
 		}
-		BoolTFContext boolTF = value.boolTF();
-		if(boolTF!=null) {
-			v=(boolTF.FALSE()==null);
+		String vStr = value.getText();
+		if("true".equals(vStr)) {
+			v=true;
+		}else if("false".equals(vStr)) {
+			v=false;
 		}
 		
 		TerminalNode transAttr = value.TransArrt();

@@ -24,7 +24,7 @@ public class StartClient {
                 }
                 //构建发送参数
                 X2YMsg request = new X2YMsg();
-                request.setMsg( new X2YValue(VLAUETYPE.STRING, " select phone,price,create_time from T_PH where   Phone_seach(phone,Contains,'99') price>2000f and ismy=true and city>3 order by price  limit 12000000,10"));
+                request.setMsg( new X2YValue(VLAUETYPE.STRING, " select phone,price,create_time from T_PH where   Phone_seach(phone,Contains,'99') and price>2000f and ismy=true and city>3 order by price  limit 1748108,10"));
                 SyncWrite s = new SyncWrite();
                 X2YMsg response = s.writeAndSync(future.channel(), request, 1000);
                 
