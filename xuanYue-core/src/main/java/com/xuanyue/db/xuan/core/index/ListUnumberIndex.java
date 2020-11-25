@@ -179,6 +179,14 @@ public final class ListUnumberIndex implements IColumn{
 		}
 	}
 
+	public int checkExpr(String method,Object value) {
+		if((!(value instanceof Integer) && !(value instanceof Long))||!"contains".equals(method.toLowerCase())) {
+			return 0;
+		}
+		return 2;
+	}
+	
+	
 	@Override
 	public void flush(int maxId) {
 		data.forEach(d->{

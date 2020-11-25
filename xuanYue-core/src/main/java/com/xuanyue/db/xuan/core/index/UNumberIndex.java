@@ -234,6 +234,30 @@ public class UNumberIndex implements IColumn{
 			throw new IndexException(  this.getClass().getName()+ " not support " + method);
 		}
 	}
+	public int checkExpr(String method,Object value) {
+		if(!(value instanceof Integer) &&!(value instanceof Long) ){
+			return 0;
+		}
+		if("!=".equals(method)) {
+			return 1;
+		}else if("=".equals(method)) {
+			return 1;
+		}else if(">=".equals(method)){
+			return 2;
+		}else if(">".equals(method)){
+			return 2;
+		}else if("<=".equals(method)){
+			return 2;
+		}else if("<".equals(method)){
+			return 2;
+		}else {
+			return 0;
+			//throw new IndexException(  this.getClass().getName()+ " not support " + method);
+		}
+	}
+	
+	
+	
 	public static void main(String[] args) {
 		UNumberIndex un = new UNumberIndex(10);
 		int maxId = 10;

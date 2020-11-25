@@ -18,6 +18,11 @@
 	<jackson.version>2.4.0</jackson.version>
 	<junit.version>4.11</junit.version>
   </properties>
+  
+  
+  
+  
+  
 <dependencies>
 	<dependency>
 	    <groupId>org.apache.commons</groupId>
@@ -89,6 +94,12 @@
 		    <groupId>org.apache.maven.plugins</groupId>
 		    <artifactId>maven-javadoc-plugin</artifactId>
 		    <version>3.0.0</version>
+		    <configuration>
+			    <additionalJOptions>
+			    	<additionalJOption>-Xdoclint:none</additionalJOption>
+			    </additionalJOptions>
+			    <aggregate>true</aggregate>
+		    </configuration>
 		  </plugin>
 	</plugins>
 
@@ -99,7 +110,6 @@
 		<module>xuanYue-core</module>
 		<module>xuanYue-seach</module>
 		<module>xuanYue-utils</module>
-		<module>xuanYue-servant</module>
 		<module>xuanYue-netty-base</module>
 		<module>xuanYue-alone-server</module>
 		<module>xuanYue-sdk</module>

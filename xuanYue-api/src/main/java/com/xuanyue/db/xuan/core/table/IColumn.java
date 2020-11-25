@@ -13,23 +13,33 @@ import com.xuanyue.db.xuan.msg.VLAUETYPE;
  */
 public interface IColumn extends IPersistence{
 
-	//= 等
+	/**= 等*/
 	public void equeals(IBitIndex cache, IBitIndex now,Number value);
-	// > 大于
+	/** > 大于*/
 	public void greater(IBitIndex cache,IBitIndex now,Number value);
-	// <
+	/** < */
 	public void less(IBitIndex cache,IBitIndex now,Number value);
-	//>=
+	/** >=*/
 	public void greaterAndEq(IBitIndex cache,IBitIndex now,Number value);
-	//<=
+	/** <= */
 	public void lessAndEq(IBitIndex cache,IBitIndex now,Number value);
-	//添加或更新
+	/**添加或更新*/
 	public void set(int rowId,Object value);
+	/**持久化一行数据库*/
 	public void saveRow(String path,int rowId)throws Exception;
-	//读取数据
+	/**读取数据*/
 	public Object get(int rowId);
-	//通用的逻辑表达式  
+	/**通用的逻辑表达式*/  
 	public void expr(String method,Object value,List<IBitIndex> caches);
+	/**
+	 * 检查逻辑运算表达式是否有语法错误
+	 * @param fieldName
+	 * @param op
+	 * @param v
+	 * @param caches
+	 * @return
+	 */
+	public int checkExpr(String op,Object v);
 	/**
 	 * 刷新最大ID
 	 * @param maxId
@@ -55,14 +65,7 @@ public interface IColumn extends IPersistence{
 	 */
 	public boolean checkSortE(boolean isDesc,String names);
 	/**
-	 *case 0://int
-	 *case 1://float
-	 *case 2://long
-	 *case 3://Date
-	 *case 4://boolean
-	 *case 5://MapBoolean 
-	 *case 6://MapNum
-	 *case 7://List<String>
+	 * 数据类型
 	 * @return
 	 */
 	public VLAUETYPE getType();

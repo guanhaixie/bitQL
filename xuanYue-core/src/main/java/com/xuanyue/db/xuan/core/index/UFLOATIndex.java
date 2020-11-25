@@ -198,4 +198,8 @@ public class UFLOATIndex implements IColumn{
 	public void saveRow(String path, int rowId) throws Exception {
 		data.saveRow(String.format("%s/data", path), rowId);
 	}
+	@Override
+	public int checkExpr(String op, Object v) {
+		return data.checkExpr(op, v);
+	}
 }

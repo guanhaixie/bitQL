@@ -115,6 +115,11 @@ public class UIntIndex implements IColumn{
 		data.saveRow(path, rowId);
 	}
 
+	@Override
+	public int checkExpr(String method, Object value) {
+		return data.checkExpr(method, value);
+	}
+
 	
 	
 	

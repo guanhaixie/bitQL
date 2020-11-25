@@ -46,7 +46,7 @@ public Token match(int ttype) throws RecognitionException {
 		return t;
 	}
 	else {
-		throw new RuntimeException("miss "+ tokenNames[ttype]);
+		throw new RuntimeException("miss "+ _SYMBOLIC_NAMES[ttype]);
 	}
 	
 }

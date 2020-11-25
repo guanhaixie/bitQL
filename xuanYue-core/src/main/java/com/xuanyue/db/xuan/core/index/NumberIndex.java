@@ -133,7 +133,35 @@ public class NumberIndex implements IColumn{
 			throw new IndexException(  this.getClass().getName()+ " not support " + method);
 		}
 	}
-
+	@Override
+	public int checkExpr(String method, Object v) {
+		if(!( v instanceof Number) ) {
+			return 0;
+		}
+		if("!=".equals(method)) {
+//			this.equeals(caches.get(0),null, value);
+//			caches.get(0).not();
+			return 1;
+		}else if("=".equals(method)) {
+//			this.equeals(caches.get(0),null, value);
+			return 1;
+		}else if(">=".equals(method)){
+//			this.greaterAndEq(caches.get(0), caches.get(1), value);
+			return 2;
+		}else if(">".equals(method)){
+//			this.greater(caches.get(0), caches.get(1), value);
+			return 2;
+		}else if("<=".equals(method)){
+//			this.lessAndEq(caches.get(0), caches.get(1), value);
+			return 2;
+		}else if("<".equals(method)){
+//			this.less(caches.get(0), caches.get(1), value);
+			return 2;
+		}else {
+			//throw new IndexException(  this.getClass().getName()+ " not support " + method);
+			return 0;
+		}
+	}
 	@Override
 	public void save(String path) throws Exception {
 		File p = new File(path);

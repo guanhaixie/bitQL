@@ -91,7 +91,9 @@ public class IntIndex implements IColumn{
 	public void expr(String method, Object value, List<IBitIndex> caches) {
 		data.expr(method, value, caches);
 	}
-
+	public int checkExpr(String method,Object value) {
+		return data.checkExpr(method, value);
+	}
 	@Override
 	public void flush(int maxId) {
 		data.flush(maxId);

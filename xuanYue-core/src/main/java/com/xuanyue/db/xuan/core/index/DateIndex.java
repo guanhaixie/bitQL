@@ -111,6 +111,28 @@ public class DateIndex implements IColumn{
 		}
 	}
 
+	public int checkExpr(String method,Object value) {
+		if(!(value instanceof Date)) {
+			return 0;
+		}
+		if("!=".equals(method)) {
+			return 1;
+		}else if("=".equals(method)) {
+			return 1;
+		}else if(">=".equals(method)){
+			return 2;
+		}else if(">".equals(method)){
+			return 2;
+		}else if("<=".equals(method)){
+			return 2;
+		}else if("<".equals(method)){
+			return 2;
+		}else {
+			return 0;
+		}
+		
+	}
+	
 	@Override
 	public void save(String path) throws Exception {
 		File p = new File(path);

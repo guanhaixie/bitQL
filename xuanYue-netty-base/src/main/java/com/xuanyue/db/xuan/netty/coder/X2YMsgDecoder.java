@@ -21,8 +21,6 @@ public class X2YMsgDecoder extends ByteToMessageDecoder{
 		msg.setMsg(  new X2YValue(VLAUETYPE.STRING));
 		msg.setMsgId(new X2YValue(VLAUETYPE.LONG));
 		decoder(in,msg);
-		System.out.println(msg.getMsg().value());
-		System.out.println(msg.getMsgId().value());
 		out.add(msg);
 	}
 	public void decoder(ByteBuf in,X2YMsg tar) {

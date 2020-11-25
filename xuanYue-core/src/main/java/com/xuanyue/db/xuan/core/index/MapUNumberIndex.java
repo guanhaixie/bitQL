@@ -146,6 +146,25 @@ public class MapUNumberIndex implements IColumn{
 		sub.expr(method, valueO, caches);
 		
 	}
+	public int checkExpr(String method,Object value) {
+		try {
+			@SuppressWarnings("unchecked")
+			Map<String,Object> c = (Map<String,Object>)value;
+			if(null==c.get("key")||null==c.get("value")) {
+				return 0;
+			}
+			UNumberIndex sub = name2BitIndex.get(c.get("key").toString().toLowerCase());
+			if(sub==null) {
+				return 0;
+			}
+			Object valueO = c.get("value");
+			return sub.checkExpr(method, valueO);
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+	
+	
 	@Override
 	public int getDataSize() {
 		return name2BitIndex.size()*size+1;

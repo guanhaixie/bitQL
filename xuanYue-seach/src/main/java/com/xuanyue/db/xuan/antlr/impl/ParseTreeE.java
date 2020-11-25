@@ -6,6 +6,9 @@ public class ParseTreeE {
 
 	private ParseTree tree;
 	private int parallel;
+	private int maxSource;
+	
+	
 	public ParseTree getTree() {
 		return tree;
 	}
@@ -13,6 +16,13 @@ public class ParseTreeE {
 		return parallel;
 	}
 	
+	
+	public int getMaxSource() {
+		return maxSource;
+	}
+	public void setMaxSource(int maxSource) {
+		this.maxSource = maxSource;
+	}
 	public void setTree(ParseTree tree) {
 		this.tree = tree;
 	}

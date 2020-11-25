@@ -2,6 +2,7 @@ package com.xuanyue.db.xuan.core.index;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -115,7 +116,26 @@ public class FLOATIndex implements IColumn{
 			throw new IndexException("FloatIndex not support " + method);
 		}
 	}
-
+	public int checkExpr(String method,Object value) {
+		if(!(value instanceof Number)) {
+			return 0;
+		}
+		if("!=".equals(method)) {
+			return 1;
+		}else if("=".equals(method)) {
+			return 1;
+		}else if(">=".equals(method)){
+			return 2;
+		}else if(">".equals(method)){
+			return 2;
+		}else if("<=".equals(method)){
+			return 2;
+		}else if("<".equals(method)){
+			return 2;
+		}else {
+			return 0;
+		}
+	}
 	@Override
 	public void save(String path) throws Exception {
 		data.save(String.format("%s/data", path));

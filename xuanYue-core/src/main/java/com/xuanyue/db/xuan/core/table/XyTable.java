@@ -269,8 +269,11 @@ public class XyTable implements IXyTable{
 	}
 	@Override
 	public int checkExpr(String fieldName, String op, Object v) {
-		// TODO Auto-generated method stub
-		return 0;
+		IColumn c = this.getColumn(fieldName);
+		if(c==null) {
+			return 0;
+		}
+		return c.checkExpr(op, v);
 	}
 	
 	

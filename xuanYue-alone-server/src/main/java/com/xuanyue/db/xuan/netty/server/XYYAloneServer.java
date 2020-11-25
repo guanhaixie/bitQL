@@ -1,5 +1,6 @@
 package com.xuanyue.db.xuan.netty.server;
 
+import com.xuanyue.db.xuan.SeachContext;
 import com.xuanyue.db.xuan.netty.coder.X2YMsgDecoder;
 import com.xuanyue.db.xuan.netty.coder.X2YMsgEecoder;
 
@@ -14,7 +15,10 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class XYYAloneServer {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
+		
+		SeachContext.initer();
+		
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {

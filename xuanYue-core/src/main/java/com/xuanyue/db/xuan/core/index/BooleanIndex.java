@@ -98,6 +98,31 @@ public class BooleanIndex implements  IColumn{
 		}
 	}
 
+	public int checkExpr(String method,Object value) {
+		
+		if( !(value instanceof Boolean)) {
+			return 0;
+		}
+		int v = ( (boolean)value?1:0  );
+		if("=".equals(method)) {
+			return 1;
+		}else if(">=".equals(method)){
+//			this.greaterAndEq(caches.get(0), caches.get(1), v);
+			return 2;
+		}else if(">".equals(method)){
+//			this.greater(caches.get(0), caches.get(1), v);
+			return 2;
+		}else if("<=".equals(method)){
+			//this.lessAndEq(caches.get(0), caches.get(1), v);
+			return 2;
+		}else if("<".equals(method)){
+//			this.lessAndEq(caches.get(0), caches.get(1), v);
+			return 2;
+		}else {
+			return 0;
+		}
+	}
+	
 	@Override
 	public void save(String path) throws Exception {
 		File p = new File(path);

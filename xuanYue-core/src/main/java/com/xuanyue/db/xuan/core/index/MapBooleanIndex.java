@@ -166,6 +166,17 @@ public class MapBooleanIndex implements IColumn{
 		}
 	}
 
+	public int checkExpr(String method,Object value) {
+		if(value==null||!name2BitIndex.containsKey(value.toString())) {
+			return 0;
+		}
+		if(  !"!=".equals(method)&& !"=".equals(method)) {
+			return 0;
+		}
+		return 1;
+	}
+	
+	
 	public static void main(String[] args) {
 		Map<String,String> suzi2Id = new HashMap<>();
 		suzi2Id.put("sz0", "0");

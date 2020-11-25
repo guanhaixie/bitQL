@@ -101,7 +101,7 @@ public class PhoneIndex implements IColumn{
 		String v = value.toString();
 		int num = 0;
 		int len = v.length();
-		for(int i=0;i<11;i++) {
+		for(int i=0;i<len;i++) {
 			if(len>i) {
 				if(v.charAt(i)=='*') {
 					
@@ -227,6 +227,8 @@ public class PhoneIndex implements IColumn{
 	@Override
 	public void expr(String method, Object v, List<IBitIndex> caches) {
 		// TODO Auto-generated method stub
+		
+		
 		if("=".equals(method)) {
 			this.equealsStr(caches.get(0),null, v);
 		}else if("contains".equals(method.toLowerCase())){
@@ -239,7 +241,41 @@ public class PhoneIndex implements IColumn{
 			throw new IndexException(  this.getClass().getName()+ " not support " + method);
 		}
 	}
-
+	@Override
+	public int checkExpr(String method, Object v) {
+		if(v==null||v.toString().length()>11) {
+			return 0;
+		}
+		if("=".equals(method)) {
+			return 1;
+		}else if("contains".equals(method.toLowerCase())){
+			
+			for(char c:v.toString().toCharArray()) {
+				if(c<48||c>57) {
+					return 0;
+				}
+			}
+			
+			return 2;
+		}else if("positionmatch".equals(method.toLowerCase())){
+			for(char c:v.toString().toCharArray()) {
+				if(c!='_'&&(c<48||c>57)) {
+					return 0;
+				}
+			}
+//			this.positionMatch(caches.get(0), v.toString());
+			return 1;
+		}else if("has_every_char".equals(method.toLowerCase())){
+			for(char c:v.toString().toCharArray()) {
+				if(c<48||c>57) {
+					return 0;
+				}
+			}
+//			this.hasEveryChar(caches.get(0), caches.get(1), v.toString());
+			return 2;
+		}
+		return 0;
+	}
 	
 	
 	
@@ -386,4 +422,5 @@ public class PhoneIndex implements IColumn{
 		}
 		
 	}
+	
 }

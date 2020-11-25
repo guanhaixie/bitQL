@@ -11,6 +11,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import com.xuanyue.db.xuan.SeachContext;
 import com.xuanyue.db.xuan.antlr.BitQBaseListener;
 import com.xuanyue.db.xuan.antlr.BitQParser.AndConditionContext;
+import com.xuanyue.db.xuan.antlr.BitQParser.BoolTFContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.ConditionElementContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.ConditionExprContext;
 import com.xuanyue.db.xuan.antlr.BitQParser.ExprContext;
@@ -31,7 +32,6 @@ import com.xuanyue.db.xuan.core.exception.SQLException;
 import com.xuanyue.db.xuan.core.table.IBitIndex;
 import com.xuanyue.db.xuan.core.table.IColumn;
 import com.xuanyue.db.xuan.core.table.IXyTable;
-import com.xuanyue.db.xuan.msg.VLAUETYPE;
 import com.xuanyue.db.xuan.msg.X2YValue;
 
 /**
@@ -45,9 +45,8 @@ import com.xuanyue.db.xuan.msg.X2YValue;
  */
 public class ProofreaderListenerImpl extends BitQBaseListener{
 	private IXyTable table;//表
-	private int maxSouce;//最大检索资源。
 	private List<String> fl = new ArrayList<>();//列名称
-	private Map<String,VLAUETYPE> types = new HashMap<>();//列数据类型
+//	private Map<String,VLAUETYPE> types = new HashMap<>();//列数据类型
 	private Map<String,Object> parameters;//传入参数
 	
 	private int maxId=0;
@@ -58,7 +57,9 @@ public class ProofreaderListenerImpl extends BitQBaseListener{
 		}
 	}
 	
-	
+	public int getMaxSource() {
+		return maxId+1;
+	}
 	public void setParameters(Map<String,X2YValue> pV) {
 		this.parameters=new HashMap<>();
 		if(pV!=null) {
@@ -92,24 +93,17 @@ public class ProofreaderListenerImpl extends BitQBaseListener{
 		}
 		List<TerminalNode> lasts = fnl.get(fnl.size()-1).NAME();
 		String tn = lasts.get(lasts.size()-1).getText().toLowerCase();
-		try {
-			table = SeachContext.getTable(tn);
-			if(table==null) {
-				throw new IndexException(String.format("table %s is not exists", tn));
-			}
-			for(int i=0;i<fl.size();i++) {
-				if("rowid".equals(fl.get(i) )) {
-					types.put( fl.get(i) , VLAUETYPE.INT);
-				}else {
-					IColumn c=table.getColumn(fl.get(i));
-					if(c==null) {
-						throw new IndexException(String.format("column %s is not exists", fl.get(i)));
-					}
-					types.put( fl.get(i) ,table.getType(fl.get(i)));
+		table = SeachContext.getTable(tn);
+		if(table==null) {
+			throw new SQLException(String.format("table %s is not exists", tn));
+		}
+		for(int i=0;i<fl.size();i++) {
+			if(!"rowid".equals(fl.get(i) )) {
+				IColumn c=table.getColumn(fl.get(i));
+				if(c==null) {
+					throw new SQLException(String.format("column %s is not exists", fl.get(i)));
 				}
 			}
-		} catch (Exception e1) {
-			throw new IndexException("ERROR at table "+tn+" exist?",e1);
 		}
 	}
 	@Override
@@ -121,99 +115,97 @@ public class ProofreaderListenerImpl extends BitQBaseListener{
 		}
 		//where
 		OrConditionContext or= ctx.orCondition();
-		List<IBitIndex> caches = null;// 第0个IBitIndex是 过滤结果后
-		
-		try {
-			caches = table.apply(maxSouce);
 			
-			if(or!=null) {
-				//执行where过滤
-				handleOr(or,caches,0);
-			}else {
-				flushMaxId(0);
-			}
-			//统计命中条数
+		if(or!=null) {
+			//执行where过滤
+			handleOr(or,null,0);
+		}else {
+			flushMaxId(0);
+		}
+		//统计命中条数
 //			this.count = caches.get(0).cardinality();
-			//分页  默认offset=0 然后取出5条记录，语法类似mysql 的limit
-			LimitContext limit = ctx.limit();
-			if(limit!=null) {
-				List<TerminalNode> on = limit.NUM();
-				try {
-					if(on.size()==2) {
-						Integer.parseInt(on.get(0).getText().trim());
-						Integer.parseInt(on.get(1).getText().trim());
-					}else if(on.size()==1) {
-						Integer.parseInt(on.get(1).getText().trim());
-					}
-				} catch (Exception e) {
-					throw new SQLException("ERROR limit ");
-				} 
-				if(on.size()!=2&&on.size()!=1){
-					throw new SQLException("ERROR limit ");
+		//分页  默认offset=0 然后取出5条记录，语法类似mysql 的limit
+		LimitContext limit = ctx.limit();
+		if(limit!=null) {
+			List<TerminalNode> on = limit.NUM();
+			try {
+				if(on.size()==2) {
+					Integer.parseInt(on.get(0).getText().trim());
+					Integer.parseInt(on.get(1).getText().trim());
+				}else if(on.size()==1) {
+					Integer.parseInt(on.get(1).getText().trim());
 				}
+			} catch (Exception e) {
+				throw new SQLException("ERROR limit ");
+			} 
+			if(on.size()!=2&&on.size()!=1){
+				throw new SQLException("ERROR limit ");
 			}
-			//排序
-			SortByContext sort = ctx.sortBy();
-			if(sort!=null) {
-				List<SortEContext> el = sort.sortE();
-				for(SortEContext e:el) {
-					FullNameContext fnc = e.fullName();
-					List<TerminalNode> ns = fnc.NAME();
-					TerminalNode key = e.STRING();//Map类型的字段时按照摸个key对应的value排序
-					String fn = ns.get(ns.size()-1 ).getText();
-					IColumn c = table.getColumn(fn);
-					if(c==null|| 
-							!c.checkSortE(false, key!=null?valueOfStr( key.getText() ):null )
-							) {
-						throw new SQLException("ERROR at sort :"  + e.getText() );
-					}
-				}
-			}
-			
-			MixContext mix = ctx.mix();
-			if(mix!=null) {
-				//混合排序 见函数 mixLimit
-				FullNameContext fnc = mix.fullName();
+		}
+		//排序
+		SortByContext sort = ctx.sortBy();
+		if(sort!=null) {
+			List<SortEContext> el = sort.sortE();
+			for(SortEContext e:el) {
+				FullNameContext fnc = e.fullName();
 				List<TerminalNode> ns = fnc.NAME();
-				List<TerminalNode> numl = mix.NUM();
-				
-				String fn = ns.get(ns.size()-1 ).getText().toLowerCase();
-				flushMaxId(2);
-				for(TerminalNode n:numl) {
-					String key = n.getText();
-					int t = table.checkExpr(fn, "=", Integer.parseInt(key) );
-					if(t==0) {
-						throw new SQLException("ERROR at sort :"  + fn+" not support mix sort" );
-					}
-					flushMaxId(t+2);
+				TerminalNode key = e.STRING();//Map类型的字段时按照摸个key对应的value排序
+				String fn = ns.get(ns.size()-1 ).getText();
+				IColumn c = table.getColumn(fn);
+				if(c==null|| 
+						!c.checkSortE(false, key!=null?valueOfStr( key.getText() ):null )
+						) {
+					throw new SQLException("ERROR at sort :"  + e.getText() );
 				}
-				flushMaxId(6);
-			}else {
-				flushMaxId(4);
 			}
+		}
+		
+		MixContext mix = ctx.mix();
+		if(mix!=null) {
+			//混合排序 见函数 mixLimit
+			FullNameContext fnc = mix.fullName();
+			List<TerminalNode> ns = fnc.NAME();
+			List<TerminalNode> numl = mix.NUM();
 			
-		} catch (Exception e) {
-			throw new IndexException(e);
+			String fn = ns.get(ns.size()-1 ).getText().toLowerCase();
+			flushMaxId(2);
+			for(TerminalNode n:numl) {
+				String key = n.getText();
+				int t = table.checkExpr(fn, "=", Integer.parseInt(key) );
+				if(t==0) {
+					throw new SQLException("ERROR at sort :"  + fn+" not support mix sort" );
+				}
+				flushMaxId(t+2);
+			}
+			flushMaxId(6);
+		}else {
+			flushMaxId(4);
 		}
 	}
 
 
 	private void handleOr(OrConditionContext or,List<IBitIndex> caches,int from) {
-		flushMaxId(from+1);
+		flushMaxId(from);
 		List<AndConditionContext> andlist = or.andCondition();
+		if(andlist==null||andlist.size()==0) {
+			throw new SQLException("ERROR at where : not has expr" );
+		}
 		handleAnd(andlist.get(0),caches,from+1);
 		for(int i=1;i<andlist.size();i++) {
 			handleAnd(andlist.get(i),caches,from+1);
 		}
 	}
 	private void handleAnd(AndConditionContext and,List<IBitIndex> caches,int from) {
-		flushMaxId(from+1);
+		flushMaxId(from);
 		List<ConditionElementContext> el = and.conditionElement();
 		ConditionElementContext e = el.get(0);
 		GroupConditionContext group = e.groupCondition();
 		if(group!=null) {
 			handleGroupCondition(group,caches,from +1);
 		}else {
+			if(e.conditionExpr()==null) {
+				throw new SQLException("ERROR at where: not has expr" );
+			}
 			handleConditionExpr(e.conditionExpr(),caches,  from+1);
 		}
 		for(int i=1;i<el.size();i++) {
@@ -232,20 +224,20 @@ public class ProofreaderListenerImpl extends BitQBaseListener{
 		handleOr(or,caches,from);
 	}
 	private void handleConditionExpr(ConditionExprContext expr,List<IBitIndex> caches,int from) {
+		flushMaxId(from);
 		Phone_seachContext phone = expr.phone_seach();
-		
 		if(phone!=null) {
 			FullNameContext fn = phone.fullName();
 			String method = phone.op.getText().toLowerCase();
 			if("positionmatch".equals(method)||"contains".equals(method)||"has_every_char".equals(method)) {
 				;
 			}else {
-				throw new IndexException("method : "+method +" not support");
+				throw new SQLException("method : "+method +" not support");
 			}
 			
 			int x = table.checkExpr(fn.getText(), method, valueOfStr(phone.STRING().getText()));
 			if(x==0) {
-				throw new IndexException("ERROR at : "+ phone.getText());
+				throw new SQLException("ERROR at : "+ phone.getText());
 			}else {
 				flushMaxId(from+x);
 			}
@@ -270,13 +262,13 @@ public class ProofreaderListenerImpl extends BitQBaseListener{
 		}else if("phone_seach".equals(method.toLowerCase())){
 			;
 		}else{
-			throw new IndexException("method : "+method +" not support");
+			throw new SQLException("method : "+method +" not support");
 		}
 		
 		
 		ValuesContext value = expr.values();
 		if(value==null) {
-			throw new IndexException("ERROR  expr value is null : "+expr.getText());
+			throw new SQLException("ERROR  expr value is null : "+expr.getText());
 		}
 		
 		Object v = null;
@@ -298,7 +290,7 @@ public class ProofreaderListenerImpl extends BitQBaseListener{
 					v = Integer.parseInt(ivs);
 				}
 			} catch (NumberFormatException e) {
-				throw new IndexException("ERROR  expr value type  : "+expr.getText());
+				throw new SQLException("ERROR  expr value type  : "+expr.getText());
 			}
 		}
 		
@@ -310,14 +302,12 @@ public class ProofreaderListenerImpl extends BitQBaseListener{
 				SimpleDateFormat formatter = new SimpleDateFormat(valueOfStr(ss.get(0).getText()));
 				v = formatter.parse(valueOfStr(ss.get(1).getText()));
 			} catch (Exception e) {
-				throw new IndexException("error at : "+to_date.getText());
+				throw new SQLException("error at : "+to_date.getText());
 			}
 		}
-		
-		if("true".equals( value.getText().toLowerCase() )) {
-			v = true;
-		}else if("false".equals( value.getText().toLowerCase() )) {
-			v = false;
+		BoolTFContext boolTF = value.boolTF();
+		if(boolTF!=null) {
+			v=(boolTF.FALSE()==null);
 		}
 		
 		TerminalNode transAttr = value.TransArrt();
@@ -326,7 +316,7 @@ public class ProofreaderListenerImpl extends BitQBaseListener{
 			ta = ta.substring( 1 , ta.length());
 			v =parameters.get(ta);
 			if(!parameters.containsKey(ta)) {
-				throw new IndexException("can not get the parameter  : "+expr.getText());
+				throw new SQLException("can not get the parameter  : "+expr.getText());
 			}
 		}
 		
