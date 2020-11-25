@@ -17,7 +17,7 @@ public class XYYAloneServer {
 
 	public static void main(String[] args) throws Exception {
 		
-		SeachContext.initer();
+		SeachContext.initer("e:/data");
 		
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();

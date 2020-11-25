@@ -141,11 +141,11 @@ public class SeachContext {
 	}
 
 	
-	public static void initer() throws Exception {
+	public static void initer(String dataPath) throws Exception {
 		DBMeta dbMeta = new DBMeta();
 		dbMeta.setName("xiegh");
 		
-		dbMeta.setDataPath("e:/data");
+		dbMeta.setDataPath(dataPath);
 		
 		TableMeta phs = new TableMeta();
 		phs.setName("t_ph");
